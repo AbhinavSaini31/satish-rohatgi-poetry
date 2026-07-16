@@ -10,23 +10,52 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Mrs+Saint+Delafield&family=Noto+Serif+Devanagari:wght@400;500;600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ivory:#FBF2EF;
-    --ivory-warm:#F7E7E1;
-    --sage:#8A9A7E;
-    --forest:#4A5A42;
-    --rose:#E3AFA8;
-    --rose-deep:#B5615A;
-    --rose-deepest:#8C4640;
-    --gold:#C4A35A;
-    --charcoal:#3A362E;
-    --charcoal-soft:#6b6558;
+    --ivory:#FBF1E7;
+    --ivory-warm:#F6E4D9;
+    --sage:#7C9473;
+    --forest:#2F4A34;
+    --rose:#D9A29A;
+    --rose-deep:#9C4550;
+    --rose-deepest:#722F38;
+    --gold:#B8924A;
+    --charcoal:#332B22;
+    --charcoal-soft:#6b5f4f;
+    transition:none;
+  }
+
+  /* ---------- page-wide mood themes ---------- */
+  body.mood-love{
+    --rose-deep:#9C4550; --rose-deepest:#722F38; --gold:#B8924A; --forest:#2F4A34; --sage:#7C9473;
+  }
+  body.mood-nature{
+    --rose-deep:#4C7052; --rose-deepest:#345436; --gold:#87A067; --forest:#2C4A31; --sage:#6B9174;
+  }
+  body.mood-life{
+    --rose-deep:#93744A; --rose-deepest:#664F31; --gold:#B8945E; --forest:#4A3B24; --sage:#9C8153;
+  }
+  body.mood-sad{
+    --rose-deep:#576F87; --rose-deepest:#3D5265; --gold:#8397A8; --forest:#3A4A57; --sage:#8397A8;
+  }
+  body.mood-motivational{
+    --rose-deep:#B8813A; --rose-deepest:#8C6023; --gold:#C9A25A; --forest:#5C4416; --sage:#B79459;
+  }
+  body.mood-other{
+    --rose-deep:#7E6389; --rose-deepest:#564064; --gold:#A788B3; --forest:#4A3459; --sage:#9A82A5;
+  }
+
+  body, .nav-mark, .contact-link, .section-head h2, .filter-btn, .divider .line{
+    transition:color 0.5s ease, border-color 0.5s ease, background 0.5s ease;
   }
 
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
 
   body{
-    background:var(--ivory);
+    background:
+      radial-gradient(circle at 15% 8%, color-mix(in srgb, var(--gold) 7%, transparent) 0%, transparent 32%),
+      radial-gradient(circle at 88% 18%, color-mix(in srgb, var(--rose-deep) 6%, transparent) 0%, transparent 38%),
+      radial-gradient(circle at 50% 95%, color-mix(in srgb, var(--sage) 7%, transparent) 0%, transparent 40%),
+      var(--ivory);
     color:var(--charcoal);
     font-family:'EB Garamond', serif;
     font-size:19px;
@@ -51,15 +80,24 @@
   nav{
     position:fixed; top:0; left:0; right:0;
     display:flex; justify-content:space-between; align-items:center;
-    padding:26px 6vw;
+    padding:22px 6vw;
     z-index:50;
     background:linear-gradient(to bottom, rgba(251,247,240,0.95), rgba(251,247,240,0));
+    transition:padding 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+  }
+  nav.scrolled{
+    padding:14px 6vw;
+    background:rgba(251,247,240,0.96);
+    box-shadow:0 4px 18px rgba(58,54,46,0.08);
+    backdrop-filter:blur(6px);
   }
   .nav-mark{
     font-family:'Mrs Saint Delafield', cursive;
     font-size:30px;
     color:var(--forest);
+    transition:font-size 0.35s ease;
   }
+  nav.scrolled .nav-mark{font-size:25px;}
   .nav-links{
     display:flex; gap:34px;
     font-family:'Jost', sans-serif;
@@ -68,9 +106,72 @@
     text-transform:uppercase;
     color:var(--charcoal-soft);
   }
-  .nav-links a{text-decoration:none; transition:color 0.25s ease;}
+  .nav-links a{
+    text-decoration:none;
+    position:relative;
+    padding-bottom:2px;
+    transition:color 0.25s ease;
+  }
+  .nav-links a::after{
+    content:"";
+    position:absolute;
+    left:0; bottom:-2px;
+    width:0%; height:1px;
+    background:var(--rose-deep);
+    transition:width 0.3s ease;
+  }
   .nav-links a:hover{color:var(--rose-deep);}
-  @media(max-width:640px){ .nav-links{display:none;} }
+  .nav-links a:hover::after{width:100%;}
+
+  .nav-hamburger{
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+    gap:5px;
+    width:32px; height:32px;
+    background:none;
+    border:none;
+    cursor:pointer;
+    z-index:60;
+  }
+  .nav-hamburger span{
+    display:block;
+    height:2px;
+    width:100%;
+    background:var(--forest);
+    border-radius:2px;
+    transition:transform 0.3s ease, opacity 0.3s ease;
+  }
+  .nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .nav-hamburger.open span:nth-child(2){opacity:0;}
+  .nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  .mobile-menu{
+    position:fixed;
+    inset:0;
+    background:var(--ivory);
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:36px;
+    z-index:55;
+    opacity:0;
+    transition:opacity 0.3s ease;
+  }
+  .mobile-menu.open{display:flex; opacity:1;}
+  .mobile-menu a{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-size:32px;
+    color:var(--forest);
+    text-decoration:none;
+  }
+
+  @media(max-width:640px){
+    .nav-links{display:none;}
+    .nav-hamburger{display:flex;}
+  }
 
   /* ---------- botanical ornament (reused) ---------- */
   .sprig{
@@ -130,8 +231,21 @@
     font-family:'Mrs Saint Delafield', cursive;
     font-style:normal;
     font-size:clamp(46px, 8vw, 78px);
-    color:var(--rose-deep);
+    background:linear-gradient(100deg, var(--rose-deepest) 0%, var(--rose-deep) 30%, var(--gold) 50%, var(--rose-deep) 70%, var(--rose-deepest) 100%);
+    background-size:250% 100%;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
     margin-top:6px;
+    animation:shimmer 6s ease-in-out infinite;
+  }
+  @keyframes shimmer{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .hero h1 .accent{animation:none;}
   }
   .hero-sub{
     margin-top:26px;
@@ -149,6 +263,23 @@
   }
 
   /* ---------- section shared ---------- */
+  /* ---------- scroll reveal ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity 0.8s cubic-bezier(.22,1,.36,1), transform 0.8s cubic-bezier(.22,1,.36,1);
+  }
+  .reveal.in-view{
+    opacity:1;
+    transform:translateY(0);
+  }
+  #poemGrid .poem-card.reveal:nth-of-type(1){transition-delay:0s;}
+  #poemGrid .poem-card.reveal:nth-of-type(2){transition-delay:0.12s;}
+  #poemGrid .poem-card.reveal:nth-of-type(3){transition-delay:0.24s;}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1; transform:none; transition:none;}
+  }
+
   section{
     padding:110px 6vw;
     max-width:720px;
@@ -192,17 +323,54 @@
   .poem-list{display:flex; flex-direction:column; gap:28px;}
 
   .poem-card{
-    background:var(--ivory-warm);
-    border:1px solid rgba(181,97,90,0.3);
-    border-radius:4px;
+    --card-accent:var(--rose-deep);
+    --card-bg-a:var(--ivory-warm);
+    --card-bg-b:#F1DDCB;
+    background:linear-gradient(155deg, var(--card-bg-a) 0%, var(--card-bg-b) 100%);
+    border:1px solid rgba(168,67,74,0.28);
+    border-top:4px solid var(--card-accent);
+    border-radius:6px;
     padding:30px 32px;
     cursor:pointer;
-    transition:box-shadow 0.3s ease, border-color 0.3s ease;
+    transition:box-shadow 0.3s ease, border-color 0.3s ease, transform 0.25s ease;
     position:relative;
   }
   .poem-card:hover{
-    box-shadow:0 10px 26px rgba(181,97,90,0.15);
-    border-color:var(--rose-deep);
+    box-shadow:0 14px 30px color-mix(in srgb, var(--card-accent) 30%, transparent);
+    border-color:var(--card-accent);
+    transform:translateY(-3px);
+  }
+
+  /* mood palettes */
+  .poem-card[data-category="Love"]{
+    --card-accent:#9C4550;
+    --card-bg-a:#F1E1D6;
+    --card-bg-b:#EAD5C4;
+  }
+  .poem-card[data-category="Nature"]{
+    --card-accent:#4C7052;
+    --card-bg-a:#E9EDE0;
+    --card-bg-b:#DAE2CC;
+  }
+  .poem-card[data-category="Life"]{
+    --card-accent:#93744A;
+    --card-bg-a:#EEE6D5;
+    --card-bg-b:#E1D2B6;
+  }
+  .poem-card[data-category="Sad"]{
+    --card-accent:#576F87;
+    --card-bg-a:#E6EAED;
+    --card-bg-b:#D5DCE3;
+  }
+  .poem-card[data-category="Motivational"]{
+    --card-accent:#B8813A;
+    --card-bg-a:#F3E7D2;
+    --card-bg-b:#E9D3AC;
+  }
+  .poem-card[data-category="Other"]{
+    --card-accent:#7E6389;
+    --card-bg-a:#EBE2EB;
+    --card-bg-b:#DCCBDF;
   }
 
   .poem-head{
@@ -215,7 +383,8 @@
     font-family:'Playfair Display', 'Noto Serif Devanagari', serif;
     font-style:italic;
     font-size:26px;
-    color:var(--forest);
+    color:var(--card-accent, var(--forest));
+    filter:brightness(0.85);
   }
   .poem-badge{
     font-family:'Jost', sans-serif;
@@ -280,11 +449,32 @@
     letter-spacing:0.04em;
     color:var(--charcoal-soft);
     padding:4px 2px;
+    transition:color 0.2s ease, transform 0.15s ease;
   }
+  .social-btn:hover{color:var(--rose-deep);}
+  .social-btn:active{transform:scale(0.94);}
   .social-btn svg{width:17px; height:17px; transition:transform 0.2s ease;}
   .like-btn.liked svg{transform:scale(1.15);}
   .like-btn.liked{color:var(--rose-deepest);}
   .like-btn:active svg{transform:scale(0.85);}
+
+  .like-btn{position:relative; overflow:visible;}
+  .heart-burst{
+    position:absolute;
+    left:8px; top:0;
+    width:14px; height:14px;
+    pointer-events:none;
+    color:var(--rose-deepest);
+    opacity:0;
+    animation:heartFloat 0.9s ease-out forwards;
+  }
+  @keyframes heartFloat{
+    0%{opacity:0.9; transform:translate(0,0) scale(0.6) rotate(0deg);}
+    100%{opacity:0; transform:translate(var(--dx,10px), -34px) scale(1.1) rotate(var(--dr,15deg));}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .heart-burst{display:none;}
+  }
 
   .comment-section{
     display:none;
@@ -343,6 +533,89 @@
     cursor:pointer;
   }
   .comment-post-btn:hover{background:var(--rose-deepest);}
+
+  /* ---------- category filter ---------- */
+  .filter-bar{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:44px;
+  }
+  .filter-btn{
+    font-family:'Jost', sans-serif;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    background:transparent;
+    border:1px solid rgba(181,97,90,0.35);
+    color:var(--charcoal-soft);
+    padding:7px 16px;
+    border-radius:16px;
+    cursor:pointer;
+    transition:background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  }
+  .filter-btn:hover{border-color:var(--rose-deep);}
+  .filter-btn.active{
+    background:var(--rose-deep);
+    border-color:var(--rose-deep);
+    color:#fff;
+  }
+  .filter-btn[data-cat="Love"].active{background:#A8434A; border-color:#A8434A;}
+  .filter-btn[data-cat="Nature"].active{background:#4C7A52; border-color:#4C7A52;}
+  .filter-btn[data-cat="Life"].active{background:#9C7A45; border-color:#9C7A45;}
+  .filter-btn[data-cat="Sad"].active{background:#5B7C99; border-color:#5B7C99;}
+  .filter-btn[data-cat="Motivational"].active{background:#D68A2D; border-color:#D68A2D;}
+  .filter-btn[data-cat="Other"].active{background:#8A6A9C; border-color:#8A6A9C;}
+  .poem-card.hidden-by-filter{display:none;}
+
+  .category-badge{
+    font-family:'Jost', sans-serif;
+    font-size:10px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--card-accent, var(--forest));
+    border:1px solid var(--card-accent, var(--sage));
+    padding:3px 9px;
+    border-radius:12px;
+    white-space:nowrap;
+    display:inline-block;
+  }
+
+  /* ---------- share ---------- */
+  .share-wrap{position:relative;}
+  .share-popover{
+    display:none;
+    position:absolute;
+    bottom:calc(100% + 8px);
+    left:0;
+    background:var(--ivory);
+    border:1px solid rgba(181,97,90,0.3);
+    border-radius:8px;
+    box-shadow:0 12px 28px rgba(58,54,46,0.25);
+    padding:10px;
+    z-index:20;
+    min-width:190px;
+  }
+  .share-popover.show{display:block;}
+  .share-popover a, .share-popover button{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    width:100%;
+    text-align:left;
+    background:none;
+    border:none;
+    font-family:'Jost', sans-serif;
+    font-size:12px;
+    color:var(--charcoal);
+    text-decoration:none;
+    padding:8px 10px;
+    border-radius:6px;
+    cursor:pointer;
+  }
+  .share-popover a:hover, .share-popover button:hover{background:rgba(181,97,90,0.1);}
+  .share-popover svg{width:15px; height:15px; flex-shrink:0;}
 
   .card-actions{
     display:flex;
@@ -404,13 +677,20 @@
   .modal-overlay{
     position:fixed; inset:0;
     background:rgba(58,54,46,0.55);
-    display:none;
+    display:flex;
     align-items:center;
     justify-content:center;
     z-index:100;
     padding:24px;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity 0.3s ease, visibility 0s linear 0.3s;
   }
-  .modal-overlay.show{display:flex;}
+  .modal-overlay.show{
+    opacity:1;
+    visibility:visible;
+    transition:opacity 0.3s ease, visibility 0s linear 0s;
+  }
   .modal-card{
     background:var(--ivory);
     max-width:520px;
@@ -422,6 +702,11 @@
     box-shadow:0 24px 60px rgba(58,54,46,0.35);
     position:relative;
     border:1px solid rgba(196,163,90,0.4);
+    transform:scale(0.94) translateY(10px);
+    transition:transform 0.35s cubic-bezier(.22,1,.36,1);
+  }
+  .modal-overlay.show .modal-card{
+    transform:scale(1) translateY(0);
   }
   .modal-card h3{
     font-family:'Playfair Display', serif;
@@ -462,9 +747,11 @@
     border-radius:20px;
     cursor:pointer;
     border:none;
+    transition:background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
   }
   .btn-primary{background:var(--forest); color:var(--ivory);}
   .btn-primary:hover{background:#334130;}
+  .btn-primary:active, .btn-secondary:active{transform:scale(0.96);}
   .btn-secondary{background:transparent; border:1px solid rgba(63,79,58,0.35); color:var(--charcoal-soft);}
   .modal-close{
     position:absolute; top:16px; right:18px;
@@ -512,19 +799,33 @@
   @media(max-width:640px){
     section{padding:80px 6vw;}
     .poem-card{padding:24px 22px;}
+    .poem-social{gap:22px; flex-wrap:wrap;}
+    .social-btn{padding:8px 4px; font-size:13px;}
+    .social-btn svg{width:19px; height:19px;}
+    .share-popover{left:auto; right:0;}
+    .filter-btn{padding:8px 14px; font-size:11px;}
   }
 </style>
 </head>
 <body>
 
-<nav>
+<nav id="mainNav">
   <div class="nav-mark">S. Rohatgi</div>
   <div class="nav-links">
     <a href="#about">About</a>
     <a href="#poems">Poems</a>
     <a href="#contact">Contact</a>
   </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about">About</a>
+  <a href="#poems">Poems</a>
+  <a href="#contact">Contact</a>
+</div>
 
 <header class="hero">
   <div class="petal-field" aria-hidden="true">
@@ -557,11 +858,11 @@
 </header>
 
 <section id="about">
-  <div class="section-head">
+  <div class="section-head reveal">
     <span class="eyebrow">about</span>
     <h2>the poet</h2>
   </div>
-  <div class="about-text">
+  <div class="about-text reveal">
     <p>Satish Rohatgi writes poems the way a garden is tended — slowly, with patience, returning to the same lines the way one returns to water a favourite bloom.</p>
     <p>Every poem here has been set down quietly, kept for the moment someone needed to read it.</p>
     <div class="signature">— Satish</div>
@@ -573,18 +874,29 @@
 <span class="line"></span></div>
 
 <section id="poems">
-  <div class="section-head">
+  <div class="section-head reveal">
     <span class="eyebrow">selected poems</span>
     <h2>from the garden</h2>
   </div>
 
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" data-cat="All">All</button>
+    <button class="filter-btn" data-cat="Love">Love</button>
+    <button class="filter-btn" data-cat="Nature">Nature</button>
+    <button class="filter-btn" data-cat="Life">Life</button>
+    <button class="filter-btn" data-cat="Sad">Sad</button>
+    <button class="filter-btn" data-cat="Motivational">Motivational</button>
+    <button class="filter-btn" data-cat="Other">Other</button>
+  </div>
+
   <div class="poem-list" id="poemGrid">
 
-    <div class="poem-card" data-poem="0" data-id="evening-window">
+    <div class="poem-card reveal" data-poem="0" data-id="evening-window" data-category="Nature">
       <div class="poem-head">
         <span class="poem-title">The Evening Window</span>
         <span class="poem-badge">placeholder</span>
       </div>
+      <span class="category-badge">Nature</span>
       <p class="poem-snippet">"the light falls slow across the sill..."</p>
       <div class="poem-full">
         <div class="poem-full-inner">The light falls slow across the sill,
@@ -601,6 +913,13 @@ only left a window for it to enter.</div>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>
           <span class="comment-count">0</span> comments
         </button>
+        <div class="share-wrap">
+          <button class="social-btn share-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.6 15.4 6.4M8.6 13.4l6.8 4.2"/></svg>
+            Share
+          </button>
+          <div class="share-popover"></div>
+        </div>
       </div>
       <div class="comment-section" data-poem-id="evening-window">
         <div class="comment-list"></div>
@@ -612,11 +931,12 @@ only left a window for it to enter.</div>
       </div>
     </div>
 
-    <div class="poem-card" data-poem="1" data-id="river-kept">
+    <div class="poem-card reveal" data-poem="1" data-id="river-kept" data-category="Life">
       <div class="poem-head">
         <span class="poem-title">What the River Kept</span>
         <span class="poem-badge">placeholder</span>
       </div>
+      <span class="category-badge">Life</span>
       <p class="poem-snippet">"a space held open on purpose..."</p>
       <div class="poem-full">
         <div class="poem-full-inner">This is a placeholder verse,
@@ -633,6 +953,13 @@ and mean far more than this one does.</div>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>
           <span class="comment-count">0</span> comments
         </button>
+        <div class="share-wrap">
+          <button class="social-btn share-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.6 15.4 6.4M8.6 13.4l6.8 4.2"/></svg>
+            Share
+          </button>
+          <div class="share-popover"></div>
+        </div>
       </div>
       <div class="comment-section" data-poem-id="river-kept">
         <div class="comment-list"></div>
@@ -644,11 +971,12 @@ and mean far more than this one does.</div>
       </div>
     </div>
 
-    <div class="poem-card" data-poem="2" data-id="letter-unsent">
+    <div class="poem-card reveal" data-poem="2" data-id="letter-unsent" data-category="Love">
       <div class="poem-head">
         <span class="poem-title">A Letter, Unsent</span>
         <span class="poem-badge">placeholder</span>
       </div>
+      <span class="category-badge">Love</span>
       <p class="poem-snippet">"not every line needs saying yet..."</p>
       <div class="poem-full">
         <div class="poem-full-inner">Not every line needs saying yet.
@@ -665,6 +993,13 @@ for a hand that has not come to write them.</div>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>
           <span class="comment-count">0</span> comments
         </button>
+        <div class="share-wrap">
+          <button class="social-btn share-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.6 15.4 6.4M8.6 13.4l6.8 4.2"/></svg>
+            Share
+          </button>
+          <div class="share-popover"></div>
+        </div>
       </div>
       <div class="comment-section" data-poem-id="letter-unsent">
         <div class="comment-list"></div>
@@ -717,6 +1052,16 @@ for a hand that has not come to write them.</div>
       <option value="Hindi">हिन्दी (Hindi)</option>
     </select>
 
+    <label for="poemCategory">Category</label>
+    <select id="poemCategory">
+      <option value="Love">Love</option>
+      <option value="Nature">Nature</option>
+      <option value="Life">Life</option>
+      <option value="Sad">Sad</option>
+      <option value="Motivational">Motivational</option>
+      <option value="Other">Other</option>
+    </select>
+
     <label for="poemTitleInput">Title</label>
     <input type="text" id="poemTitleInput" placeholder="e.g. Raat Ke Naam">
 
@@ -752,11 +1097,11 @@ for a hand that has not come to write them.</div>
 <span class="line"></span></div>
 
 <section id="contact">
-  <div class="section-head">
+  <div class="section-head reveal">
     <span class="eyebrow">get in touch</span>
     <h2>say hello</h2>
   </div>
-  <div class="contact-inner">
+  <div class="contact-inner reveal">
     <p>For readings, correspondence, or simply to say a poem was felt.</p>
     <a class="contact-link" href="mailto:hello@example.com">hello@example.com</a>
   </div>
@@ -767,8 +1112,59 @@ for a hand that has not come to write them.</div>
 </footer>
 
 <script>
-  /* ---------- likes (shared, via public counter) + comments (local) ---------- */
-  const LIKES_NAMESPACE = 'satish-rohatgi-poetry-site';
+  /* ---------- nav scroll state ---------- */
+  const mainNav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    mainNav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  /* ---------- mobile hamburger menu ---------- */
+  const navHamburger = document.getElementById('navHamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  navHamburger.addEventListener('click', () => {
+    navHamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navHamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    });
+  });
+
+  /* ---------- scroll reveal ---------- */
+  if('IntersectionObserver' in window){
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  }else{
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view'));
+  }
+
+  function spawnHeartBurst(likeBtn){
+    for(let i = 0; i < 4; i++){
+      const heart = document.createElement('span');
+      heart.className = 'heart-burst';
+      heart.innerHTML = '&#10084;';
+      const dx = (Math.random() * 30 - 15).toFixed(0) + 'px';
+      const dr = (Math.random() * 40 - 20).toFixed(0) + 'deg';
+      heart.style.setProperty('--dx', dx);
+      heart.style.setProperty('--dr', dr);
+      heart.style.animationDelay = (i * 0.07) + 's';
+      heart.style.left = (6 + i * 4) + 'px';
+      likeBtn.appendChild(heart);
+      setTimeout(() => heart.remove(), 1000);
+    }
+  }
+
+  /* ---------- likes (local, reliable) + comments (local) ---------- */
+  const LIKES_KEY = 'srLikeCounts';
   const LIKED_KEY = 'srLiked';
   const COMMENTS_KEY = 'srComments';
 
@@ -780,19 +1176,19 @@ for a hand that has not come to write them.</div>
     localStorage.setItem(LIKED_KEY, JSON.stringify([...set]));
   }
 
-  async function fetchLikeCount(poemId){
-    try{
-      const res = await fetch(`https://api.countapi.xyz/get/${LIKES_NAMESPACE}/${poemId}`);
-      const data = await res.json();
-      return typeof data.value === 'number' ? data.value : 0;
-    }catch(e){ return null; }
+  function getLikeCounts(){
+    try{ return JSON.parse(localStorage.getItem(LIKES_KEY) || '{}'); }
+    catch(e){ return {}; }
   }
-  async function hitLikeCount(poemId){
-    try{
-      const res = await fetch(`https://api.countapi.xyz/hit/${LIKES_NAMESPACE}/${poemId}`);
-      const data = await res.json();
-      return typeof data.value === 'number' ? data.value : null;
-    }catch(e){ return null; }
+  function getLikeCount(poemId){
+    const counts = getLikeCounts();
+    return counts[poemId] || 0;
+  }
+  function incrementLikeCount(poemId){
+    const counts = getLikeCounts();
+    counts[poemId] = (counts[poemId] || 0) + 1;
+    localStorage.setItem(LIKES_KEY, JSON.stringify(counts));
+    return counts[poemId];
   }
 
   function getComments(poemId){
@@ -830,25 +1226,18 @@ for a hand that has not come to write them.</div>
     const likeCountEl = likeBtn.querySelector('.like-count');
     const likedSet = getLikedSet();
     if(likedSet.has(poemId)) likeBtn.classList.add('liked');
+    likeCountEl.textContent = getLikeCount(poemId);
 
-    fetchLikeCount(poemId).then(count => {
-      if(count !== null) likeCountEl.textContent = count;
-    });
-
-    likeBtn.addEventListener('click', async (e) => {
+    likeBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const set = getLikedSet();
-      const alreadyLiked = set.has(poemId);
-      if(alreadyLiked) return;
+      if(set.has(poemId)) return;
       likeBtn.classList.add('liked');
-      const newCount = await hitLikeCount(poemId);
-      if(newCount !== null){
-        likeCountEl.textContent = newCount;
-        set.add(poemId);
-        saveLikedSet(set);
-      }else{
-        likeBtn.classList.remove('liked');
-      }
+      const newCount = incrementLikeCount(poemId);
+      likeCountEl.textContent = newCount;
+      set.add(poemId);
+      saveLikedSet(set);
+      spawnHeartBurst(likeBtn);
     });
 
     const toggleBtn = cardEl.querySelector('.comment-toggle-btn');
@@ -877,7 +1266,79 @@ for a hand that has not come to write them.</div>
       renderComments(poemId, commentList);
       commentCountEl.textContent = getComments(poemId).length;
     });
+
+    /* share */
+    const shareBtn = cardEl.querySelector('.share-btn');
+    const sharePopover = cardEl.querySelector('.share-popover');
+    if(shareBtn && sharePopover){
+      const titleText = cardEl.querySelector('.poem-title').textContent;
+      const snippetText = cardEl.querySelector('.poem-snippet').textContent;
+      const pageUrl = window.location.href.split('#')[0];
+      const shareText = `"${snippetText.replace(/^"|"$/g, '')}" — ${titleText}, by Satish Rohatgi`;
+
+      sharePopover.innerHTML = `
+        <a href="https://wa.me/?text=${encodeURIComponent(shareText + ' ' + pageUrl)}" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.05-1.35A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2Zm0 18c-1.62 0-3.13-.47-4.4-1.28l-.32-.19-3 .8.8-2.93-.2-.31A7.95 7.95 0 0 1 4 12c0-4.42 3.58-8 8-8s8 3.58 8 8-3.58 8-8 8Z"/></svg>
+          WhatsApp
+        </a>
+        <button class="share-copy-text">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="share-copy-label">Copy poem link</span>
+        </button>
+      `;
+
+      shareBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.share-popover.show').forEach(p => { if(p !== sharePopover) p.classList.remove('show'); });
+        sharePopover.classList.toggle('show');
+      });
+
+      sharePopover.querySelector('.share-copy-text').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const btn = e.currentTarget;
+        const label = btn.querySelector('.share-copy-label');
+        const fullText = shareText + ' ' + pageUrl;
+        function markCopied(){
+          label.textContent = 'Copied!';
+          setTimeout(() => { label.textContent = 'Copy poem link'; sharePopover.classList.remove('show'); }, 1200);
+        }
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(fullText).then(markCopied).catch(() => fallbackCopy(fullText, markCopied));
+        }else{
+          fallbackCopy(fullText, markCopied);
+        }
+      });
+
+      sharePopover.addEventListener('click', (e) => e.stopPropagation());
+    }
   }
+
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.share-popover.show').forEach(p => p.classList.remove('show'));
+  });
+
+  /* ---------- category filter ---------- */
+  const filterBar = document.getElementById('filterBar');
+  const MOOD_CLASSES = ['mood-love','mood-nature','mood-life','mood-sad','mood-motivational','mood-other'];
+
+  filterBar.addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-btn');
+    if(!btn) return;
+    filterBar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.cat;
+    document.querySelectorAll('.poem-card').forEach(card => {
+      if(card.id === 'addPoemTrigger') return;
+      const cardCat = card.dataset.category;
+      const show = (cat === 'All') || (cardCat === cat);
+      card.classList.toggle('hidden-by-filter', !show);
+    });
+
+    document.body.classList.remove(...MOOD_CLASSES);
+    if(cat !== 'All'){
+      document.body.classList.add('mood-' + cat.toLowerCase());
+    }
+  });
 
   document.querySelectorAll('.poem-card[data-id]').forEach(wireSocialForCard);
 
@@ -928,6 +1389,7 @@ for a hand that has not come to write them.</div>
 
   const typeInput = document.getElementById('poemType');
   const langInput = document.getElementById('poemLang');
+  const categoryInput = document.getElementById('poemCategory');
   const titleInput = document.getElementById('poemTitleInput');
   const snippetInput = document.getElementById('poemSnippetInput');
   const bodyInput = document.getElementById('poemBodyInput');
@@ -958,12 +1420,13 @@ for a hand that has not come to write them.</div>
   function buildCardHTML(poem){
     const langBadge = poem.lang === 'Hindi' ? 'हिन्दी' : '';
     const photoHtml = poem.photo ? `<img class="poem-photo" src="${poem.photo}" alt="${escapeHtml(poem.title)}">` : '';
-    return `<div class="poem-card" data-custom="true" data-id="${poem.id}">
+    return `<div class="poem-card" data-custom="true" data-id="${poem.id}" data-category="${escapeHtml(poem.category)}">
       ${photoHtml}
       <div class="poem-head">
         <span class="poem-title">${escapeHtml(poem.title)}</span>
         <span class="poem-badge">${escapeHtml(poem.type)}${langBadge ? ' · ' + langBadge : ''}</span>
       </div>
+      <span class="category-badge">${escapeHtml(poem.category)}</span>
       <p class="poem-snippet">"${escapeHtml(poem.snippet)}"</p>
       <div class="poem-full">
         <div class="poem-full-inner">${escapeHtml(poem.body)}</div>
@@ -977,6 +1440,13 @@ for a hand that has not come to write them.</div>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>
           <span class="comment-count">0</span> comments
         </button>
+        <div class="share-wrap">
+          <button class="social-btn share-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.6 15.4 6.4M8.6 13.4l6.8 4.2"/></svg>
+            Share
+          </button>
+          <div class="share-popover"></div>
+        </div>
       </div>
       <div class="comment-section" data-poem-id="${poem.id}">
         <div class="comment-list"></div>
@@ -1000,11 +1470,12 @@ for a hand that has not come to write them.</div>
   function codeForPoem(poem){
     const langBadge = poem.lang === 'Hindi' ? ' · हिन्दी' : '';
     const photoHtml = poem.photo ? `\n  <img class="poem-photo" src="${poem.photo}" alt="${poem.title}">` : '';
-    return `<div class="poem-card" data-id="${poem.id}">${photoHtml}
+    return `<div class="poem-card" data-id="${poem.id}" data-category="${poem.category}">${photoHtml}
   <div class="poem-head">
     <span class="poem-title">${poem.title}</span>
     <span class="poem-badge">${poem.type}${langBadge}</span>
   </div>
+  <span class="category-badge">${poem.category}</span>
   <p class="poem-snippet">"${poem.snippet}"</p>
   <div class="poem-full">
     <div class="poem-full-inner">${poem.body}</div>
@@ -1018,6 +1489,13 @@ for a hand that has not come to write them.</div>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>
       <span class="comment-count">0</span> comments
     </button>
+    <div class="share-wrap">
+      <button class="social-btn share-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.6 15.4 6.4M8.6 13.4l6.8 4.2"/></svg>
+        Share
+      </button>
+      <div class="share-popover"></div>
+    </div>
   </div>
   <div class="comment-section" data-poem-id="${poem.id}">
     <div class="comment-list"></div>
@@ -1059,13 +1537,20 @@ for a hand that has not come to write them.</div>
         renderSavedPoems();
       });
     });
+
+    const activeFilterBtn = document.querySelector('.filter-btn.active');
+    const activeCat = activeFilterBtn ? activeFilterBtn.dataset.cat : 'All';
+    document.querySelectorAll('.poem-card[data-custom="true"]').forEach(card => {
+      const show = (activeCat === 'All') || (card.dataset.category === activeCat);
+      card.classList.toggle('hidden-by-filter', !show);
+    });
   }
 
   function openModal(){ modal.classList.add('show'); copyHint.classList.remove('show'); titleInput.focus(); }
   function closeModal(){
     modal.classList.remove('show');
     titleInput.value = ''; snippetInput.value = ''; bodyInput.value = '';
-    typeInput.value = 'Poem'; langInput.value = 'English';
+    typeInput.value = 'Poem'; langInput.value = 'English'; categoryInput.value = 'Love';
     photoInput.value = ''; pendingPhotoData = null; photoPreviewWrap.style.display = 'none';
   }
 
@@ -1121,6 +1606,7 @@ for a hand that has not come to write them.</div>
       id: makeId(),
       type: typeInput.value,
       lang: langInput.value,
+      category: categoryInput.value,
       title: title,
       snippet: snippetInput.value.trim() || body.split('\n')[0].slice(0, 50),
       body: body,
