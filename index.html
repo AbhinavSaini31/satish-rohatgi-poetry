@@ -218,6 +218,29 @@
     max-width:640px;
   }
   .hero .eyebrow{display:block; margin-bottom:18px;}
+
+  .mantra{
+    font-family:'Noto Serif Devanagari', serif;
+    font-weight:600;
+    font-size:clamp(24px, 3.4vw, 34px);
+    letter-spacing:0.06em;
+    text-align:center;
+    margin-bottom:26px;
+    background:linear-gradient(100deg, var(--gold) 0%, var(--rose-deep) 30%, var(--gold) 55%, var(--rose-deep) 80%, var(--gold) 100%);
+    background-size:250% 100%;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    animation:shimmer 6s ease-in-out infinite, mantraPulse 3.2s ease-in-out infinite;
+    text-shadow:0 0 22px rgba(184,146,74,0.25);
+  }
+  @keyframes mantraPulse{
+    0%,100%{opacity:0.85; transform:scale(1);}
+    50%{opacity:1; transform:scale(1.03);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .mantra{animation:none;}
+  }
   .hero h1{
     font-family:'Playfair Display', serif;
     font-style:italic;
@@ -836,6 +859,7 @@
     <svg class="petal" style="left:88%; width:15px; animation-duration:15s; animation-delay:8s;" viewBox="0 0 16 16"><path d="M8 1 C11 4, 11 8, 8 15 C5 8, 5 4, 8 1Z" fill="#E3AFA8"/></svg>
   </div>
   <div class="hero-frame">
+    <div class="mantra">ॐ नमः शिवाय</div>
     <div class="sprig">
       <svg width="140" height="50" viewBox="0 0 140 50" fill="none">
         <path d="M10 25 C35 8, 55 8, 70 25 C85 8, 105 8, 130 25" stroke="#C4A35A" stroke-width="1" opacity="0.85"/>
@@ -891,126 +915,6 @@
 
   <div class="poem-list" id="poemGrid">
 
-    <div class="poem-card reveal" data-poem="0" data-id="evening-window" data-category="Nature">
-      <div class="poem-head">
-        <span class="poem-title">The Evening Window</span>
-        <span class="poem-badge">placeholder</span>
-      </div>
-      <span class="category-badge">Nature</span>
-      <p class="poem-snippet">"the light falls slow across the sill..."</p>
-      <div class="poem-full">
-        <div class="poem-full-inner">The light falls slow across the sill,
-a quiet the day forgot to keep.
-I have not written this poem yet —
-only left a window for it to enter.</div>
-      </div>
-      <div class="poem-social">
-        <button class="social-btn like-btn" data-poem-id="evening-window">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.8-10-9.5C.5 7.5 3 4 6.5 4c2 0 3.5 1.2 5.5 3.5C14 5.2 15.5 4 17.5 4 21 4 23.5 7.5 22 11.5 19.5 16.2 12 21 12 21Z"/></svg>
-          <span class="like-count">0</span>
-        </button>
-        <button class="social-btn comment-toggle-btn" data-poem-id="evening-window">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>
-          <span class="comment-count">0</span> comments
-        </button>
-        <div class="share-wrap">
-          <button class="social-btn share-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.6 15.4 6.4M8.6 13.4l6.8 4.2"/></svg>
-            Share
-          </button>
-          <div class="share-popover"></div>
-        </div>
-      </div>
-      <div class="comment-section" data-poem-id="evening-window">
-        <div class="comment-list"></div>
-        <div class="comment-form">
-          <input type="text" class="comment-name" placeholder="Your name (optional)">
-          <textarea class="comment-text" placeholder="Write a comment..."></textarea>
-          <button class="comment-post-btn">Post comment</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="poem-card reveal" data-poem="1" data-id="river-kept" data-category="Life">
-      <div class="poem-head">
-        <span class="poem-title">What the River Kept</span>
-        <span class="poem-badge">placeholder</span>
-      </div>
-      <span class="category-badge">Life</span>
-      <p class="poem-snippet">"a space held open on purpose..."</p>
-      <div class="poem-full">
-        <div class="poem-full-inner">This is a placeholder verse,
-a space held open on purpose —
-where a real poem will one day sit,
-and mean far more than this one does.</div>
-      </div>
-      <div class="poem-social">
-        <button class="social-btn like-btn" data-poem-id="river-kept">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.8-10-9.5C.5 7.5 3 4 6.5 4c2 0 3.5 1.2 5.5 3.5C14 5.2 15.5 4 17.5 4 21 4 23.5 7.5 22 11.5 19.5 16.2 12 21 12 21Z"/></svg>
-          <span class="like-count">0</span>
-        </button>
-        <button class="social-btn comment-toggle-btn" data-poem-id="river-kept">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>
-          <span class="comment-count">0</span> comments
-        </button>
-        <div class="share-wrap">
-          <button class="social-btn share-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.6 15.4 6.4M8.6 13.4l6.8 4.2"/></svg>
-            Share
-          </button>
-          <div class="share-popover"></div>
-        </div>
-      </div>
-      <div class="comment-section" data-poem-id="river-kept">
-        <div class="comment-list"></div>
-        <div class="comment-form">
-          <input type="text" class="comment-name" placeholder="Your name (optional)">
-          <textarea class="comment-text" placeholder="Write a comment..."></textarea>
-          <button class="comment-post-btn">Post comment</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="poem-card reveal" data-poem="2" data-id="letter-unsent" data-category="Love">
-      <div class="poem-head">
-        <span class="poem-title">A Letter, Unsent</span>
-        <span class="poem-badge">placeholder</span>
-      </div>
-      <span class="category-badge">Love</span>
-      <p class="poem-snippet">"not every line needs saying yet..."</p>
-      <div class="poem-full">
-        <div class="poem-full-inner">Not every line needs saying yet.
-Some pages wait the way a seed does —
-in the dark, in the patient dirt,
-for a hand that has not come to write them.</div>
-      </div>
-      <div class="poem-social">
-        <button class="social-btn like-btn" data-poem-id="letter-unsent">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.8-10-9.5C.5 7.5 3 4 6.5 4c2 0 3.5 1.2 5.5 3.5C14 5.2 15.5 4 17.5 4 21 4 23.5 7.5 22 11.5 19.5 16.2 12 21 12 21Z"/></svg>
-          <span class="like-count">0</span>
-        </button>
-        <button class="social-btn comment-toggle-btn" data-poem-id="letter-unsent">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>
-          <span class="comment-count">0</span> comments
-        </button>
-        <div class="share-wrap">
-          <button class="social-btn share-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.6 15.4 6.4M8.6 13.4l6.8 4.2"/></svg>
-            Share
-          </button>
-          <div class="share-popover"></div>
-        </div>
-      </div>
-      <div class="comment-section" data-poem-id="letter-unsent">
-        <div class="comment-list"></div>
-        <div class="comment-form">
-          <input type="text" class="comment-name" placeholder="Your name (optional)">
-          <textarea class="comment-text" placeholder="Write a comment..."></textarea>
-          <button class="comment-post-btn">Post comment</button>
-        </div>
-      </div>
-    </div>
-
     <div class="add-card" id="addPoemTrigger">
       <span class="plus">+</span>
       <span class="add-label">owner: add a poem</span>
@@ -1018,7 +922,7 @@ for a hand that has not come to write them.</div>
 
   </div>
 
-  <p class="hint">click a poem to read it in full &nbsp;·&nbsp; the placeholders are examples — write your own above</p>
+  <p class="hint">click a poem to read it in full &nbsp;·&nbsp; use the card above to add your first poem</p>
 </section>
 
 <div class="modal-overlay" id="passwordModal">
