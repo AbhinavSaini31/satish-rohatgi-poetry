@@ -4,267 +4,236 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Satish Rohatgi — Poetry</title>
-<meta name="description" content="Poems by Satish Rohatgi — a handwritten collection of verse.">
+<meta name="description" content="Poems by Satish Rohatgi — verses gathered like pressed flowers.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Special+Elite&family=Kalam:wght@400;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Mrs+Saint+Delafield&family=Noto+Serif+Devanagari:wght@400;500;600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --cork:#7a5c3e;
-    --cork-dark:#5e4530;
-    --paper-cream:#f2ead6;
-    --paper-rose:#e8c4b8;
-    --paper-sage:#c3cbb0;
-    --paper-mustard:#e7c257;
-    --ink:#2b211b;
-    --tape-pink:#e59aa0;
-    --tape-blue:#a9c6d8;
-    --twine:#a33b3b;
+    --ivory:#FBF2EF;
+    --ivory-warm:#F7E7E1;
+    --sage:#8A9A7E;
+    --forest:#4A5A42;
+    --rose:#E3AFA8;
+    --rose-deep:#B5615A;
+    --rose-deepest:#8C4640;
+    --gold:#C4A35A;
+    --charcoal:#3A362E;
+    --charcoal-soft:#6b6558;
   }
 
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
 
   body{
-    background-color:var(--cork);
-    background-image:
-      radial-gradient(circle at 20% 30%, rgba(0,0,0,0.12) 0, transparent 45%),
-      radial-gradient(circle at 80% 70%, rgba(0,0,0,0.15) 0, transparent 50%),
-      radial-gradient(circle at 50% 50%, rgba(0,0,0,0.08) 0, transparent 60%),
-      repeating-linear-gradient(0deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 3px),
-      repeating-linear-gradient(90deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 1px, transparent 1px, transparent 3px);
-    color:var(--ink);
-    font-family:'Special Elite', monospace;
-    line-height:1.6;
+    background:var(--ivory);
+    color:var(--charcoal);
+    font-family:'EB Garamond', serif;
+    font-size:19px;
+    line-height:1.75;
     overflow-x:hidden;
   }
 
   a{color:inherit;}
+  ::selection{background:var(--rose); color:var(--ivory);}
 
-  /* ---------- utility bits ---------- */
   .eyebrow{
     font-family:'Jost', sans-serif;
-    font-size:11px;
-    letter-spacing:0.22em;
+    font-size:12px;
+    letter-spacing:0.26em;
     text-transform:uppercase;
-    color:#3d2f22;
-    background:rgba(242,234,214,0.85);
-    display:inline-block;
-    padding:4px 10px;
-    border-radius:2px;
+    color:var(--gold);
   }
 
-  .pin{
-    position:absolute;
-    top:-9px; left:50%;
-    transform:translateX(-50%);
-    width:16px; height:16px;
-    border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #ff8787, #a33b3b 70%, #6b1f1f 100%);
-    box-shadow:0 3px 4px rgba(0,0,0,0.4);
-    z-index:5;
-  }
-
-  .tape{
-    position:absolute;
-    height:28px;
-    opacity:0.85;
-    box-shadow:0 1px 2px rgba(0,0,0,0.2);
-  }
-  .tape.pink{background:var(--tape-pink);}
-  .tape.blue{background:var(--tape-blue);}
-
-  .card{
-    background:var(--paper-cream);
-    box-shadow:0 8px 20px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.25);
-    position:relative;
-    padding:32px;
-  }
-
-  /* torn edge using clip-path */
-  .torn-bottom{
-    clip-path:polygon(
-      0% 0%, 100% 0%, 100% 96%,
-      97% 98%, 94% 95%, 91% 99%, 88% 96%, 85% 100%, 82% 97%,
-      79% 99%, 76% 95%, 73% 98%, 70% 96%, 67% 100%, 64% 97%,
-      61% 99%, 58% 95%, 55% 98%, 52% 96%, 49% 100%, 46% 97%,
-      43% 99%, 40% 95%, 37% 98%, 34% 96%, 31% 100%, 28% 97%,
-      25% 99%, 22% 95%, 19% 98%, 16% 96%, 13% 100%, 10% 97%,
-      7% 99%, 4% 95%, 0% 98%
-    );
-  }
+  svg.leaf-icon{width:18px; height:18px; vertical-align:-4px; margin-right:6px;}
 
   /* ---------- nav ---------- */
   nav{
     position:fixed; top:0; left:0; right:0;
     display:flex; justify-content:space-between; align-items:center;
-    padding:20px 6vw;
+    padding:26px 6vw;
     z-index:50;
+    background:linear-gradient(to bottom, rgba(251,247,240,0.95), rgba(251,247,240,0));
   }
   .nav-mark{
-    font-family:'Caveat', cursive;
-    font-weight:700;
-    font-size:28px;
-    color:var(--paper-cream);
-    text-shadow:0 2px 3px rgba(0,0,0,0.4);
+    font-family:'Mrs Saint Delafield', cursive;
+    font-size:30px;
+    color:var(--forest);
   }
   .nav-links{
-    display:flex; gap:10px;
-  }
-  .nav-links a{
-    text-decoration:none;
+    display:flex; gap:34px;
     font-family:'Jost', sans-serif;
-    font-size:11px;
-    letter-spacing:0.14em;
+    font-size:12px;
+    letter-spacing:0.16em;
     text-transform:uppercase;
-    background:rgba(242,234,214,0.9);
-    padding:6px 12px;
-    border-radius:2px;
-    color:var(--ink);
-    transform:rotate(-2deg);
-    display:inline-block;
-    box-shadow:0 2px 4px rgba(0,0,0,0.25);
+    color:var(--charcoal-soft);
   }
-  .nav-links a:nth-child(2){transform:rotate(1.5deg);}
-  .nav-links a:nth-child(3){transform:rotate(-1deg);}
-
+  .nav-links a{text-decoration:none; transition:color 0.25s ease;}
+  .nav-links a:hover{color:var(--rose-deep);}
   @media(max-width:640px){ .nav-links{display:none;} }
+
+  /* ---------- botanical ornament (reused) ---------- */
+  .sprig{
+    display:flex;
+    justify-content:center;
+    margin:0 auto 28px;
+    opacity:0.9;
+  }
+
+  /* floating petals — restrained, hero only */
+  .petal-field{
+    position:absolute; inset:0;
+    overflow:hidden;
+    pointer-events:none;
+  }
+  .petal{
+    position:absolute;
+    top:-40px;
+    opacity:0.55;
+    animation:petalFall linear infinite;
+  }
+  @keyframes petalFall{
+    0%{transform:translateY(0) translateX(0) rotate(0deg); opacity:0;}
+    10%{opacity:0.55;}
+    90%{opacity:0.4;}
+    100%{transform:translateY(110vh) translateX(30px) rotate(160deg); opacity:0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .petal{animation:none; display:none;}
+  }
 
   /* ---------- hero ---------- */
   .hero{
     min-height:100svh;
     display:flex;
+    flex-direction:column;
     align-items:center;
     justify-content:center;
-    padding:120px 6vw 80px;
+    text-align:center;
+    padding:140px 6vw 100px;
+    position:relative;
   }
-
-  .hero-card{
-    max-width:620px;
-    transform:rotate(-1.5deg);
-    animation:settle 0.8s cubic-bezier(.2,1.3,.4,1) both;
+  .hero-frame{
+    max-width:640px;
   }
-
-  @keyframes settle{
-    from{transform:rotate(-8deg) translateY(-40px); opacity:0;}
-    to{transform:rotate(-1.5deg) translateY(0); opacity:1;}
-  }
-
-  .hero-card .tape{ top:-14px; left:50%; transform:translateX(-50%) rotate(-3deg); width:110px; }
-
+  .hero .eyebrow{display:block; margin-bottom:18px;}
   .hero h1{
-    font-family:'Caveat', cursive;
-    font-weight:700;
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(40px, 7vw, 68px);
+    line-height:1.12;
+    color:var(--forest);
+  }
+  .hero h1 .accent{
+    display:block;
+    font-family:'Mrs Saint Delafield', cursive;
+    font-style:normal;
     font-size:clamp(46px, 8vw, 78px);
-    line-height:0.95;
-    color:var(--ink);
-    margin-top:8px;
+    color:var(--rose-deep);
+    margin-top:6px;
   }
-  .hero h1 span{color:var(--twine);}
-
   .hero-sub{
-    margin-top:18px;
-    font-size:16px;
-    color:#4a3c2e;
-    max-width:440px;
-  }
-
-  .hero-note{
     margin-top:26px;
-    font-family:'Kalam', cursive;
-    font-size:15px;
-    color:#6b1f1f;
-    transform:rotate(1deg);
-    display:inline-block;
+    font-size:18px;
+    color:var(--charcoal-soft);
+    font-style:italic;
+  }
+  .hero-scroll{
+    margin-top:56px;
+    font-family:'Jost', sans-serif;
+    font-size:11px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--sage);
   }
 
   /* ---------- section shared ---------- */
   section{
-    padding:100px 6vw;
-    max-width:900px;
+    padding:110px 6vw;
+    max-width:720px;
     margin:0 auto;
-    position:relative;
+  }
+  .section-head{text-align:center; margin-bottom:60px;}
+  .section-head .eyebrow{display:block; margin-bottom:12px;}
+  .section-head h2{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(30px, 4vw, 42px);
+    color:var(--forest);
   }
 
-  .section-head{margin-bottom:56px; text-align:center;}
-  .section-head .eyebrow{margin-bottom:16px;}
-  .section-head h2{
-    font-family:'Caveat', cursive;
-    font-weight:700;
-    font-size:clamp(36px, 5vw, 54px);
-    color:var(--paper-cream);
-    text-shadow:0 2px 3px rgba(0,0,0,0.4);
-    margin-top:6px;
+  .divider{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
+    max-width:300px;
+    margin:0 auto;
+  }
+  .divider .line{
+    height:1px;
+    flex:1;
+    background:linear-gradient(to right, transparent, var(--gold), transparent);
   }
 
   /* ---------- about ---------- */
-  .about-card{
-    transform:rotate(0.8deg);
-    max-width:640px;
-    margin:0 auto;
-    font-family:'Special Elite', monospace;
-    font-size:15.5px;
-    color:#3a2c20;
-  }
-  .about-card .tape{ top:-14px; left:12%; transform:rotate(-6deg); width:90px; }
-  .about-card .tape.two{ top:-14px; left:auto; right:10%; transform:rotate(8deg); width:80px; }
-  .about-card p{margin-bottom:16px;}
-  .about-card .sign-off{
-    font-family:'Caveat', cursive;
-    font-size:26px;
-    color:var(--twine);
-    margin-top:20px;
+  .about-text{text-align:center; color:var(--charcoal-soft);}
+  .about-text p{margin-bottom:20px;}
+  .signature{
+    font-family:'Mrs Saint Delafield', cursive;
+    font-size:32px;
+    color:var(--rose-deep);
+    margin-top:12px;
   }
 
-  /* ---------- poem board ---------- */
-  .board{
-    position:relative;
-    padding-top:40px;
-  }
-
-  .poem-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
-    gap:50px 30px;
-  }
+  /* ---------- poem cards ---------- */
+  .poem-list{display:flex; flex-direction:column; gap:28px;}
 
   .poem-card{
-    background:var(--paper-cream);
-    padding:26px 24px 30px;
-    box-shadow:0 10px 22px rgba(0,0,0,0.35);
+    background:var(--ivory-warm);
+    border:1px solid rgba(181,97,90,0.3);
+    border-radius:4px;
+    padding:30px 32px;
     cursor:pointer;
-    transition:transform 0.3s ease, box-shadow 0.3s ease;
+    transition:box-shadow 0.3s ease, border-color 0.3s ease;
     position:relative;
   }
-  .poem-card:nth-child(1){transform:rotate(-3deg); background:var(--paper-cream);}
-  .poem-card:nth-child(2){transform:rotate(2deg); background:var(--paper-rose);}
-  .poem-card:nth-child(3){transform:rotate(-1.5deg); background:var(--paper-sage);}
-  .poem-card:hover{transform:scale(1.04) rotate(0deg); box-shadow:0 16px 30px rgba(0,0,0,0.45); z-index:10;}
+  .poem-card:hover{
+    box-shadow:0 10px 26px rgba(181,97,90,0.15);
+    border-color:var(--rose-deep);
+  }
 
+  .poem-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:16px;
+  }
   .poem-title{
-    font-family:'Caveat', cursive;
-    font-weight:700;
-    font-size:28px;
-    color:var(--ink);
-    margin-bottom:6px;
+    font-family:'Playfair Display', 'Noto Serif Devanagari', serif;
+    font-style:italic;
+    font-size:26px;
+    color:var(--forest);
   }
   .poem-badge{
     font-family:'Jost', sans-serif;
-    font-size:9px;
+    font-size:10px;
     letter-spacing:0.14em;
     text-transform:uppercase;
-    color:var(--twine);
-    border:1px solid var(--twine);
-    padding:2px 7px;
-    border-radius:2px;
-    display:inline-block;
-    margin-bottom:14px;
+    color:var(--rose-deep);
+    border:1px solid var(--rose);
+    padding:3px 9px;
+    border-radius:20px;
+    white-space:nowrap;
   }
   .poem-snippet{
-    font-family:'Kalam', cursive;
-    font-size:14px;
-    color:#4a3c2e;
+    margin-top:8px;
     font-style:italic;
+    color:var(--charcoal-soft);
+    font-size:16px;
+    font-family:'EB Garamond', 'Noto Serif Devanagari', serif;
   }
 
   .poem-full{
@@ -272,78 +241,113 @@
     overflow:hidden;
     transition:max-height 0.5s ease;
   }
-  .poem-card.open .poem-full{max-height:400px; margin-top:16px;}
+  .poem-card.open .poem-full{max-height:600px; margin-top:18px;}
   .poem-full-inner{
-    font-family:'Special Elite', monospace;
-    font-size:13.5px;
+    font-size:18px;
     line-height:2;
-    color:#3a2c20;
+    color:var(--charcoal);
     white-space:pre-line;
-    border-top:1px dashed rgba(0,0,0,0.25);
-    padding-top:14px;
+    border-top:1px dashed rgba(196,163,90,0.5);
+    padding-top:18px;
+    font-family:'EB Garamond', 'Noto Serif Devanagari', serif;
   }
 
-  /* ---------- contact postcard ---------- */
-  .postcard{
-    background:var(--paper-mustard);
-    max-width:520px;
-    margin:0 auto;
-    padding:36px;
-    transform:rotate(-1deg);
-    box-shadow:0 10px 24px rgba(0,0,0,0.4);
-    position:relative;
-  }
-  .postcard .pin{top:-9px;}
-  .postcard h3{
-    font-family:'Caveat', cursive;
-    font-size:32px;
-    margin-bottom:10px;
-  }
-  .postcard p{font-size:14px; margin-bottom:20px; color:#3a2c20;}
-  .contact-link{
-    font-family:'Kalam', cursive;
-    font-size:20px;
-    text-decoration:none;
-    color:var(--ink);
-    border-bottom:2px dashed var(--ink);
-    padding-bottom:2px;
+  .poem-photo{
+    width:100%;
+    max-height:260px;
+    object-fit:cover;
+    border-radius:4px;
+    margin-bottom:16px;
+    border:1px solid rgba(181,97,90,0.25);
   }
 
-  /* ---------- add poem card + form ---------- */
-  .add-card{
-    background:rgba(242,234,214,0.5);
-    border:2px dashed rgba(242,234,214,0.6);
-    box-shadow:none;
+  /* ---------- social: likes + comments ---------- */
+  .poem-social{
     display:flex;
-    flex-direction:column;
     align-items:center;
-    justify-content:center;
-    text-align:center;
-    min-height:170px;
+    gap:18px;
+    margin-top:16px;
+  }
+  .social-btn{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:none;
+    border:none;
     cursor:pointer;
-    transform:rotate(1deg);
-    transition:transform 0.3s ease, background 0.3s ease;
+    font-family:'Jost', sans-serif;
+    font-size:12px;
+    letter-spacing:0.04em;
+    color:var(--charcoal-soft);
+    padding:4px 2px;
   }
-  .add-card:hover{transform:rotate(0deg) scale(1.03); background:rgba(242,234,214,0.7);}
-  .add-card .plus{
-    font-family:'Caveat', cursive;
-    font-size:44px;
-    color:var(--paper-cream);
-    line-height:1;
+  .social-btn svg{width:17px; height:17px; transition:transform 0.2s ease;}
+  .like-btn.liked svg{transform:scale(1.15);}
+  .like-btn.liked{color:var(--rose-deepest);}
+  .like-btn:active svg{transform:scale(0.85);}
+
+  .comment-section{
+    display:none;
+    margin-top:16px;
+    border-top:1px dashed rgba(181,97,90,0.35);
+    padding-top:16px;
   }
-  .add-card .add-label{
+  .comment-section.open{display:block;}
+
+  .comment-list{display:flex; flex-direction:column; gap:12px; margin-bottom:14px;}
+  .comment-item{
+    background:rgba(255,255,255,0.5);
+    border-radius:6px;
+    padding:10px 14px;
+    font-size:15px;
+  }
+  .comment-item .c-name{
     font-family:'Jost', sans-serif;
     font-size:11px;
-    letter-spacing:0.14em;
+    letter-spacing:0.06em;
     text-transform:uppercase;
-    color:var(--paper-cream);
-    margin-top:6px;
+    color:var(--rose-deep);
+    margin-bottom:3px;
+    display:block;
   }
+  .comment-item .c-text{color:var(--charcoal); font-family:'EB Garamond', 'Noto Serif Devanagari', serif;}
+  .comment-empty{
+    font-family:'Jost', sans-serif;
+    font-size:12px;
+    color:var(--charcoal-soft);
+    font-style:italic;
+    margin-bottom:14px;
+  }
+
+  .comment-form input, .comment-form textarea{
+    width:100%;
+    font-family:'EB Garamond', 'Noto Serif Devanagari', serif;
+    font-size:15px;
+    padding:8px 10px;
+    border:1px solid rgba(181,97,90,0.3);
+    background:#fff;
+    border-radius:4px;
+    margin-bottom:8px;
+  }
+  .comment-form textarea{min-height:60px; resize:vertical;}
+  .comment-post-btn{
+    font-family:'Jost', sans-serif;
+    font-size:10px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    background:var(--rose-deep);
+    color:#fff;
+    border:none;
+    padding:7px 16px;
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .comment-post-btn:hover{background:var(--rose-deepest);}
 
   .card-actions{
     display:flex;
     gap:10px;
-    margin-top:14px;
+    margin-top:16px;
   }
   .card-actions button{
     font-family:'Jost', sans-serif;
@@ -351,17 +355,55 @@
     letter-spacing:0.1em;
     text-transform:uppercase;
     background:none;
-    border:1px solid rgba(0,0,0,0.35);
-    color:#3a2c20;
-    padding:4px 9px;
-    border-radius:2px;
+    border:1px solid rgba(63,79,58,0.35);
+    color:var(--charcoal-soft);
+    padding:5px 10px;
+    border-radius:14px;
     cursor:pointer;
   }
-  .card-actions button:hover{background:rgba(0,0,0,0.08);}
+  .card-actions button:hover{background:rgba(196,163,90,0.12);}
 
+  /* add poem card */
+  .add-card{
+    border:1.5px dashed var(--sage);
+    border-radius:4px;
+    background:transparent;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:26px;
+    cursor:pointer;
+    transition:background 0.3s ease, border-color 0.3s ease;
+  }
+  .add-card:hover{background:rgba(138,154,126,0.08); border-color:var(--forest);}
+  .add-card .plus{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-size:26px;
+    color:var(--forest);
+  }
+  .add-card .add-label{
+    font-family:'Jost', sans-serif;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--charcoal-soft);
+  }
+
+  p.hint{
+    margin-top:36px;
+    text-align:center;
+    font-family:'Jost', sans-serif;
+    font-size:11px;
+    letter-spacing:0.06em;
+    color:var(--charcoal-soft);
+  }
+
+  /* ---------- modal ---------- */
   .modal-overlay{
     position:fixed; inset:0;
-    background:rgba(20,14,8,0.75);
+    background:rgba(58,54,46,0.55);
     display:none;
     align-items:center;
     justify-content:center;
@@ -369,23 +411,24 @@
     padding:24px;
   }
   .modal-overlay.show{display:flex;}
-
   .modal-card{
-    background:var(--paper-cream);
+    background:var(--ivory);
     max-width:520px;
     width:100%;
     max-height:88vh;
     overflow-y:auto;
-    padding:34px;
-    box-shadow:0 20px 50px rgba(0,0,0,0.5);
-    transform:rotate(-0.6deg);
+    padding:38px;
+    border-radius:6px;
+    box-shadow:0 24px 60px rgba(58,54,46,0.35);
     position:relative;
+    border:1px solid rgba(196,163,90,0.4);
   }
   .modal-card h3{
-    font-family:'Caveat', cursive;
-    font-size:32px;
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-size:30px;
+    color:var(--forest);
     margin-bottom:18px;
-    color:var(--ink);
   }
   .modal-card label{
     display:block;
@@ -393,76 +436,82 @@
     font-size:10px;
     letter-spacing:0.12em;
     text-transform:uppercase;
-    color:#5a4632;
+    color:var(--charcoal-soft);
     margin:16px 0 6px;
   }
   .modal-card input[type="text"],
   .modal-card select,
   .modal-card textarea{
     width:100%;
-    font-family:'Special Elite', monospace;
-    font-size:14px;
+    font-family:'EB Garamond', serif;
+    font-size:16px;
     padding:10px 12px;
-    border:1px solid rgba(0,0,0,0.3);
-    background:#fbf7ec;
-    color:var(--ink);
-    border-radius:2px;
+    border:1px solid rgba(63,79,58,0.3);
+    background:#fff;
+    color:var(--charcoal);
+    border-radius:4px;
   }
-  .modal-card textarea{
-    min-height:140px;
-    resize:vertical;
-    line-height:1.9;
-  }
-  .modal-buttons{
-    display:flex;
-    gap:12px;
-    margin-top:24px;
-  }
+  .modal-card textarea{min-height:140px; resize:vertical; line-height:1.9;}
+  .modal-buttons{display:flex; gap:12px; margin-top:24px;}
   .btn-primary, .btn-secondary{
     font-family:'Jost', sans-serif;
     font-size:11px;
     letter-spacing:0.12em;
     text-transform:uppercase;
-    padding:10px 18px;
-    border-radius:2px;
+    padding:10px 20px;
+    border-radius:20px;
     cursor:pointer;
     border:none;
   }
-  .btn-primary{background:var(--twine); color:#fff;}
-  .btn-primary:hover{background:#8a2f2f;}
-  .btn-secondary{background:transparent; border:1px solid rgba(0,0,0,0.35); color:#3a2c20;}
+  .btn-primary{background:var(--forest); color:var(--ivory);}
+  .btn-primary:hover{background:#334130;}
+  .btn-secondary{background:transparent; border:1px solid rgba(63,79,58,0.35); color:var(--charcoal-soft);}
   .modal-close{
-    position:absolute; top:14px; right:16px;
+    position:absolute; top:16px; right:18px;
     font-family:'Jost', sans-serif;
     font-size:18px;
     background:none; border:none; cursor:pointer;
-    color:#5a4632;
+    color:var(--charcoal-soft);
   }
   .copy-hint{
     margin-top:18px;
     font-family:'Jost', sans-serif;
     font-size:11px;
-    color:#5a4632;
-    background:rgba(0,0,0,0.05);
-    padding:10px 12px;
-    border-radius:3px;
+    color:var(--charcoal-soft);
+    background:rgba(138,154,126,0.1);
+    padding:12px 14px;
+    border-radius:6px;
     display:none;
+    line-height:1.7;
   }
   .copy-hint.show{display:block;}
+
+  /* ---------- contact ---------- */
+  .contact-inner{text-align:center;}
+  .contact-inner p{color:var(--charcoal-soft); margin-bottom:24px;}
+  .contact-link{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-size:26px;
+    color:var(--forest);
+    text-decoration:none;
+    border-bottom:1px solid var(--gold);
+    padding-bottom:3px;
+  }
 
   footer{
     padding:50px 6vw 60px;
     text-align:center;
     font-family:'Jost', sans-serif;
-    font-size:10px;
+    font-size:11px;
     letter-spacing:0.14em;
     text-transform:uppercase;
-    color:rgba(242,234,214,0.7);
+    color:var(--charcoal-soft);
   }
 
   @media(max-width:640px){
-    section{padding:70px 6vw;}
-    .hero-card, .about-card{padding:24px;}
+    section{padding:80px 6vw;}
+    .poem-card{padding:24px 22px;}
   }
 </style>
 </head>
@@ -478,12 +527,32 @@
 </nav>
 
 <header class="hero">
-  <div class="hero-card card torn-bottom">
-    <div class="tape pink"></div>
-    <span class="eyebrow">a notebook, pinned open</span>
-    <h1>Satish Rohatgi<br>writes <span>poetry.</span></h1>
-    <p class="hero-sub">Scraps, drafts, and finished lines — kept the way they were written, creases and all.</p>
-    <p class="hero-note">↓ pull up a chair and read a while</p>
+  <div class="petal-field" aria-hidden="true">
+    <svg class="petal" style="left:12%; width:16px; animation-duration:14s; animation-delay:0s;" viewBox="0 0 16 16"><path d="M8 1 C11 4, 11 8, 8 15 C5 8, 5 4, 8 1Z" fill="#E3AFA8"/></svg>
+    <svg class="petal" style="left:32%; width:12px; animation-duration:18s; animation-delay:3s;" viewBox="0 0 16 16"><path d="M8 1 C11 4, 11 8, 8 15 C5 8, 5 4, 8 1Z" fill="#B5615A"/></svg>
+    <svg class="petal" style="left:58%; width:14px; animation-duration:16s; animation-delay:6s;" viewBox="0 0 16 16"><path d="M8 1 C11 4, 11 8, 8 15 C5 8, 5 4, 8 1Z" fill="#E3AFA8"/></svg>
+    <svg class="petal" style="left:78%; width:11px; animation-duration:20s; animation-delay:1.5s;" viewBox="0 0 16 16"><path d="M8 1 C11 4, 11 8, 8 15 C5 8, 5 4, 8 1Z" fill="#B5615A"/></svg>
+    <svg class="petal" style="left:88%; width:15px; animation-duration:15s; animation-delay:8s;" viewBox="0 0 16 16"><path d="M8 1 C11 4, 11 8, 8 15 C5 8, 5 4, 8 1Z" fill="#E3AFA8"/></svg>
+  </div>
+  <div class="hero-frame">
+    <div class="sprig">
+      <svg width="140" height="50" viewBox="0 0 140 50" fill="none">
+        <path d="M10 25 C35 8, 55 8, 70 25 C85 8, 105 8, 130 25" stroke="#C4A35A" stroke-width="1" opacity="0.85"/>
+        <path d="M28 22 C24 15, 19 12, 14 14" stroke="#8A9A7E" stroke-width="1.2" fill="none"/>
+        <path d="M112 22 C116 15, 121 12, 126 14" stroke="#8A9A7E" stroke-width="1.2" fill="none"/>
+        <g transform="translate(70,25)">
+          <path d="M0 -9 C6 -5, 6 5, 0 12 C-6 5, -6 -5, 0 -9Z" fill="#E3AFA8" opacity="0.9"/>
+          <path d="M0 -6 C4 -3, 4 3, 0 8 C-4 3, -4 -3, 0 -6Z" fill="#B5615A"/>
+          <circle cx="0" cy="0" r="2" fill="#8C4640"/>
+        </g>
+      </svg>
+    </div>
+    <span class="eyebrow">a garden of verses</span>
+    <h1>Satish Rohatgi
+      <span class="accent">writes poetry</span>
+    </h1>
+    <p class="hero-sub">Poems gathered gently, like pressed flowers between the pages of a favourite book.</p>
+    <div class="hero-scroll">↓ scroll to wander in</div>
   </div>
 </header>
 
@@ -492,84 +561,160 @@
     <span class="eyebrow">about</span>
     <h2>the poet</h2>
   </div>
-  <div class="about-card card">
-    <div class="tape blue"></div>
-    <div class="tape blue two"></div>
-    <p>Satish Rohatgi writes poems the way a letter gets written — unhurried, addressed to someone in particular, even when that someone is a memory, a season, or a thought that wouldn't leave him alone.</p>
-    <p>This page is his corkboard: pinned drafts, taped-down lines, work gathered as it's written rather than all at once.</p>
-    <p class="sign-off">— S.R.</p>
+  <div class="about-text">
+    <p>Satish Rohatgi writes poems the way a garden is tended — slowly, with patience, returning to the same lines the way one returns to water a favourite bloom.</p>
+    <p>Every poem here has been set down quietly, kept for the moment someone needed to read it.</p>
+    <div class="signature">— Satish</div>
   </div>
 </section>
 
-<section id="poems" class="board">
+<div class="divider"><span class="line"></span>
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2 C13 6, 13 10, 10 14 C7 10, 7 6, 10 2Z" fill="#8A9A7E" opacity="0.7"/></svg>
+<span class="line"></span></div>
+
+<section id="poems">
   <div class="section-head">
     <span class="eyebrow">selected poems</span>
-    <h2>pinned to the board</h2>
+    <h2>from the garden</h2>
   </div>
 
-  <div class="poem-grid" id="poemGrid">
+  <div class="poem-list" id="poemGrid">
 
-    <div class="poem-card" data-poem="0">
-      <div class="pin"></div>
-      <span class="poem-badge">placeholder</span>
-      <div class="poem-title">The Evening Window</div>
-      <div class="poem-snippet">"the light falls slow across the sill..."</div>
+    <div class="poem-card" data-poem="0" data-id="evening-window">
+      <div class="poem-head">
+        <span class="poem-title">The Evening Window</span>
+        <span class="poem-badge">placeholder</span>
+      </div>
+      <p class="poem-snippet">"the light falls slow across the sill..."</p>
       <div class="poem-full">
         <div class="poem-full-inner">The light falls slow across the sill,
 a quiet the day forgot to keep.
 I have not written this poem yet —
 only left a window for it to enter.</div>
       </div>
+      <div class="poem-social">
+        <button class="social-btn like-btn" data-poem-id="evening-window">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.8-10-9.5C.5 7.5 3 4 6.5 4c2 0 3.5 1.2 5.5 3.5C14 5.2 15.5 4 17.5 4 21 4 23.5 7.5 22 11.5 19.5 16.2 12 21 12 21Z"/></svg>
+          <span class="like-count">0</span>
+        </button>
+        <button class="social-btn comment-toggle-btn" data-poem-id="evening-window">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>
+          <span class="comment-count">0</span> comments
+        </button>
+      </div>
+      <div class="comment-section" data-poem-id="evening-window">
+        <div class="comment-list"></div>
+        <div class="comment-form">
+          <input type="text" class="comment-name" placeholder="Your name (optional)">
+          <textarea class="comment-text" placeholder="Write a comment..."></textarea>
+          <button class="comment-post-btn">Post comment</button>
+        </div>
+      </div>
     </div>
 
-    <div class="poem-card" data-poem="1">
-      <div class="pin"></div>
-      <span class="poem-badge">placeholder</span>
-      <div class="poem-title">What the River Kept</div>
-      <div class="poem-snippet">"a space held open on purpose..."</div>
+    <div class="poem-card" data-poem="1" data-id="river-kept">
+      <div class="poem-head">
+        <span class="poem-title">What the River Kept</span>
+        <span class="poem-badge">placeholder</span>
+      </div>
+      <p class="poem-snippet">"a space held open on purpose..."</p>
       <div class="poem-full">
         <div class="poem-full-inner">This is a placeholder verse,
 a space held open on purpose —
 where a real poem will one day sit,
 and mean far more than this one does.</div>
       </div>
+      <div class="poem-social">
+        <button class="social-btn like-btn" data-poem-id="river-kept">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.8-10-9.5C.5 7.5 3 4 6.5 4c2 0 3.5 1.2 5.5 3.5C14 5.2 15.5 4 17.5 4 21 4 23.5 7.5 22 11.5 19.5 16.2 12 21 12 21Z"/></svg>
+          <span class="like-count">0</span>
+        </button>
+        <button class="social-btn comment-toggle-btn" data-poem-id="river-kept">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>
+          <span class="comment-count">0</span> comments
+        </button>
+      </div>
+      <div class="comment-section" data-poem-id="river-kept">
+        <div class="comment-list"></div>
+        <div class="comment-form">
+          <input type="text" class="comment-name" placeholder="Your name (optional)">
+          <textarea class="comment-text" placeholder="Write a comment..."></textarea>
+          <button class="comment-post-btn">Post comment</button>
+        </div>
+      </div>
     </div>
 
-    <div class="poem-card" data-poem="2">
-      <div class="pin"></div>
-      <span class="poem-badge">placeholder</span>
-      <div class="poem-title">A Letter, Unsent</div>
-      <div class="poem-snippet">"not every line needs saying yet..."</div>
+    <div class="poem-card" data-poem="2" data-id="letter-unsent">
+      <div class="poem-head">
+        <span class="poem-title">A Letter, Unsent</span>
+        <span class="poem-badge">placeholder</span>
+      </div>
+      <p class="poem-snippet">"not every line needs saying yet..."</p>
       <div class="poem-full">
         <div class="poem-full-inner">Not every line needs saying yet.
 Some pages wait the way a seed does —
 in the dark, in the patient dirt,
 for a hand that has not come to write them.</div>
       </div>
+      <div class="poem-social">
+        <button class="social-btn like-btn" data-poem-id="letter-unsent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.8-10-9.5C.5 7.5 3 4 6.5 4c2 0 3.5 1.2 5.5 3.5C14 5.2 15.5 4 17.5 4 21 4 23.5 7.5 22 11.5 19.5 16.2 12 21 12 21Z"/></svg>
+          <span class="like-count">0</span>
+        </button>
+        <button class="social-btn comment-toggle-btn" data-poem-id="letter-unsent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>
+          <span class="comment-count">0</span> comments
+        </button>
+      </div>
+      <div class="comment-section" data-poem-id="letter-unsent">
+        <div class="comment-list"></div>
+        <div class="comment-form">
+          <input type="text" class="comment-name" placeholder="Your name (optional)">
+          <textarea class="comment-text" placeholder="Write a comment..."></textarea>
+          <button class="comment-post-btn">Post comment</button>
+        </div>
+      </div>
     </div>
 
     <div class="add-card" id="addPoemTrigger">
       <span class="plus">+</span>
-      <span class="add-label">write a poem / shayari</span>
+      <span class="add-label">owner: add a poem</span>
     </div>
 
   </div>
 
-  <p style="margin-top:50px; text-align:center; font-family:'Jost', sans-serif; font-size:11px; letter-spacing:0.06em; color:rgba(242,234,214,0.75);">
-    click a card to unfold it &nbsp;·&nbsp; the placeholders are examples — pin your own above, or ask Claude to swap them in for you
-  </p>
+  <p class="hint">click a poem to read it in full &nbsp;·&nbsp; the placeholders are examples — write your own above</p>
 </section>
 
-<!-- Add Poem Modal -->
+<div class="modal-overlay" id="passwordModal">
+  <div class="modal-card" style="max-width:380px;">
+    <button class="modal-close" id="pwModalClose" aria-label="Close">✕</button>
+    <h3>Owner access</h3>
+    <label for="pwInput">Enter password</label>
+    <input type="password" id="pwInput" placeholder="Password">
+    <p id="pwError" style="display:none; color:#B5615A; font-family:'Jost', sans-serif; font-size:12px; margin-top:8px;">Incorrect password — try again.</p>
+    <div class="modal-buttons">
+      <button class="btn-primary" id="pwSubmitBtn">Unlock</button>
+      <button class="btn-secondary" id="pwCancelBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="poemModal">
   <div class="modal-card">
     <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
-    <h3>Pin a new poem</h3>
+    <h3>Add a new poem</h3>
 
     <label for="poemType">Type</label>
     <select id="poemType">
       <option value="Poem">Poem</option>
       <option value="Shayari">Shayari</option>
+    </select>
+
+    <label for="poemLang">Language</label>
+    <select id="poemLang">
+      <option value="English">English</option>
+      <option value="Hindi">हिन्दी (Hindi)</option>
     </select>
 
     <label for="poemTitleInput">Title</label>
@@ -579,10 +724,16 @@ for a hand that has not come to write them.</div>
     <input type="text" id="poemSnippetInput" placeholder="e.g. dil ki baat, kagaz par...">
 
     <label for="poemBodyInput">Full poem — one line per line</label>
-    <textarea id="poemBodyInput" placeholder="Write your poem or shayari here..."></textarea>
+    <textarea id="poemBodyInput" placeholder="Write your poem or shayari here... आप हिन्दी में भी लिख सकते हैं"></textarea>
+
+    <label for="poemPhotoInput">Photo (optional)</label>
+    <input type="file" id="poemPhotoInput" accept="image/*">
+    <div id="photoPreviewWrap" style="display:none; margin-top:10px;">
+      <img id="photoPreview" style="width:100%; max-height:180px; object-fit:cover; border-radius:4px; border:1px solid rgba(181,97,90,0.3);">
+    </div>
 
     <div class="modal-buttons">
-      <button class="btn-primary" id="savePoemBtn">Pin to board</button>
+      <button class="btn-primary" id="savePoemBtn">Add poem</button>
       <button class="btn-secondary" id="cancelPoemBtn">Cancel</button>
     </div>
 
@@ -596,14 +747,16 @@ for a hand that has not come to write them.</div>
   </div>
 </div>
 
+<div class="divider"><span class="line"></span>
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2 C13 6, 13 10, 10 14 C7 10, 7 6, 10 2Z" fill="#D8A7A0" opacity="0.8"/></svg>
+<span class="line"></span></div>
+
 <section id="contact">
   <div class="section-head">
     <span class="eyebrow">get in touch</span>
     <h2>say hello</h2>
   </div>
-  <div class="postcard">
-    <div class="pin"></div>
-    <h3>Drop a line</h3>
+  <div class="contact-inner">
     <p>For readings, correspondence, or simply to say a poem was felt.</p>
     <a class="contact-link" href="mailto:hello@example.com">hello@example.com</a>
   </div>
@@ -614,11 +767,125 @@ for a hand that has not come to write them.</div>
 </footer>
 
 <script>
+  /* ---------- likes (shared, via public counter) + comments (local) ---------- */
+  const LIKES_NAMESPACE = 'satish-rohatgi-poetry-site';
+  const LIKED_KEY = 'srLiked';
+  const COMMENTS_KEY = 'srComments';
+
+  function getLikedSet(){
+    try{ return new Set(JSON.parse(localStorage.getItem(LIKED_KEY) || '[]')); }
+    catch(e){ return new Set(); }
+  }
+  function saveLikedSet(set){
+    localStorage.setItem(LIKED_KEY, JSON.stringify([...set]));
+  }
+
+  async function fetchLikeCount(poemId){
+    try{
+      const res = await fetch(`https://api.countapi.xyz/get/${LIKES_NAMESPACE}/${poemId}`);
+      const data = await res.json();
+      return typeof data.value === 'number' ? data.value : 0;
+    }catch(e){ return null; }
+  }
+  async function hitLikeCount(poemId){
+    try{
+      const res = await fetch(`https://api.countapi.xyz/hit/${LIKES_NAMESPACE}/${poemId}`);
+      const data = await res.json();
+      return typeof data.value === 'number' ? data.value : null;
+    }catch(e){ return null; }
+  }
+
+  function getComments(poemId){
+    try{
+      const all = JSON.parse(localStorage.getItem(COMMENTS_KEY) || '{}');
+      return all[poemId] || [];
+    }catch(e){ return []; }
+  }
+  function saveComment(poemId, comment){
+    let all = {};
+    try{ all = JSON.parse(localStorage.getItem(COMMENTS_KEY) || '{}'); }catch(e){}
+    if(!all[poemId]) all[poemId] = [];
+    all[poemId].push(comment);
+    localStorage.setItem(COMMENTS_KEY, JSON.stringify(all));
+  }
+
+  function renderComments(poemId, listEl){
+    const comments = getComments(poemId);
+    if(comments.length === 0){
+      listEl.innerHTML = '<div class="comment-empty">No comments yet — be the first to leave one.</div>';
+      return;
+    }
+    listEl.innerHTML = comments.map(c => `
+      <div class="comment-item">
+        <span class="c-name">${escapeHtml(c.name || 'Anonymous')}</span>
+        <span class="c-text">${escapeHtml(c.text)}</span>
+      </div>`).join('');
+  }
+
+  function wireSocialForCard(cardEl){
+    const poemId = cardEl.dataset.id;
+    if(!poemId) return;
+
+    const likeBtn = cardEl.querySelector('.like-btn');
+    const likeCountEl = likeBtn.querySelector('.like-count');
+    const likedSet = getLikedSet();
+    if(likedSet.has(poemId)) likeBtn.classList.add('liked');
+
+    fetchLikeCount(poemId).then(count => {
+      if(count !== null) likeCountEl.textContent = count;
+    });
+
+    likeBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const set = getLikedSet();
+      const alreadyLiked = set.has(poemId);
+      if(alreadyLiked) return;
+      likeBtn.classList.add('liked');
+      const newCount = await hitLikeCount(poemId);
+      if(newCount !== null){
+        likeCountEl.textContent = newCount;
+        set.add(poemId);
+        saveLikedSet(set);
+      }else{
+        likeBtn.classList.remove('liked');
+      }
+    });
+
+    const toggleBtn = cardEl.querySelector('.comment-toggle-btn');
+    const commentSection = cardEl.querySelector('.comment-section');
+    const commentList = cardEl.querySelector('.comment-list');
+    const commentCountEl = toggleBtn.querySelector('.comment-count');
+    commentCountEl.textContent = getComments(poemId).length;
+
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      commentSection.classList.toggle('open');
+      if(commentSection.classList.contains('open')) renderComments(poemId, commentList);
+    });
+
+    const nameInput = cardEl.querySelector('.comment-name');
+    const textInput = cardEl.querySelector('.comment-text');
+    const postBtn = cardEl.querySelector('.comment-post-btn');
+    commentSection.addEventListener('click', (e) => e.stopPropagation());
+
+    postBtn.addEventListener('click', () => {
+      const text = textInput.value.trim();
+      if(!text) return;
+      saveComment(poemId, { name: nameInput.value.trim(), text: text });
+      nameInput.value = '';
+      textInput.value = '';
+      renderComments(poemId, commentList);
+      commentCountEl.textContent = getComments(poemId).length;
+    });
+  }
+
+  document.querySelectorAll('.poem-card[data-id]').forEach(wireSocialForCard);
+
   document.getElementById('year').textContent = new Date().getFullYear();
 
   function wireUnfold(card){
     card.addEventListener('click', (e) => {
-      if(e.target.closest('.card-actions')) return; // don't unfold when clicking copy/delete
+      if(e.target.closest('.card-actions')) return;
       const wasOpen = card.classList.contains('open');
       document.querySelectorAll('.poem-card').forEach(c => c.classList.remove('open'));
       if(!wasOpen) card.classList.add('open');
@@ -626,8 +893,30 @@ for a hand that has not come to write them.</div>
   }
   document.querySelectorAll('.poem-card').forEach(wireUnfold);
 
-  /* ---------- Add-a-poem feature ---------- */
   const STORAGE_KEY = 'srPoems';
+  const ADMIN_PASSWORD = 'satish123';
+
+  function copyText(text, btn, defaultLabel){
+    function done(){
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = defaultLabel, 1500);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+    }else{
+      fallbackCopy(text, done);
+    }
+  }
+  function fallbackCopy(text, done){
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try{ document.execCommand('copy'); done(); }catch(e){}
+    document.body.removeChild(ta);
+  }
   const grid = document.getElementById('poemGrid');
   const addTrigger = document.getElementById('addPoemTrigger');
   const modal = document.getElementById('poemModal');
@@ -638,12 +927,27 @@ for a hand that has not come to write them.</div>
   const copyCodeBtn = document.getElementById('copyCodeBtn');
 
   const typeInput = document.getElementById('poemType');
+  const langInput = document.getElementById('poemLang');
   const titleInput = document.getElementById('poemTitleInput');
   const snippetInput = document.getElementById('poemSnippetInput');
   const bodyInput = document.getElementById('poemBodyInput');
+  const photoInput = document.getElementById('poemPhotoInput');
+  const photoPreviewWrap = document.getElementById('photoPreviewWrap');
+  const photoPreview = document.getElementById('photoPreview');
 
-  const rotations = ['-2.5deg','2deg','-1.2deg','1.6deg','-2deg','1deg'];
-  const bgColors = ['var(--paper-cream)','var(--paper-rose)','var(--paper-sage)','var(--paper-mustard)'];
+  let pendingPhotoData = null;
+
+  photoInput.addEventListener('change', () => {
+    const file = photoInput.files[0];
+    if(!file){ pendingPhotoData = null; photoPreviewWrap.style.display = 'none'; return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      pendingPhotoData = reader.result;
+      photoPreview.src = pendingPhotoData;
+      photoPreviewWrap.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
 
   function escapeHtml(str){
     const d = document.createElement('div');
@@ -651,16 +955,36 @@ for a hand that has not come to write them.</div>
     return d.innerHTML;
   }
 
-  function buildCardHTML(poem, idx){
-    const rot = rotations[idx % rotations.length];
-    const bg = bgColors[idx % bgColors.length];
-    return `<div class="poem-card" style="transform:rotate(${rot}); background:${bg};" data-custom="true">
-      <div class="pin"></div>
-      <span class="poem-badge">${escapeHtml(poem.type)}</span>
-      <div class="poem-title">${escapeHtml(poem.title)}</div>
-      <div class="poem-snippet">"${escapeHtml(poem.snippet)}"</div>
+  function buildCardHTML(poem){
+    const langBadge = poem.lang === 'Hindi' ? 'हिन्दी' : '';
+    const photoHtml = poem.photo ? `<img class="poem-photo" src="${poem.photo}" alt="${escapeHtml(poem.title)}">` : '';
+    return `<div class="poem-card" data-custom="true" data-id="${poem.id}">
+      ${photoHtml}
+      <div class="poem-head">
+        <span class="poem-title">${escapeHtml(poem.title)}</span>
+        <span class="poem-badge">${escapeHtml(poem.type)}${langBadge ? ' · ' + langBadge : ''}</span>
+      </div>
+      <p class="poem-snippet">"${escapeHtml(poem.snippet)}"</p>
       <div class="poem-full">
         <div class="poem-full-inner">${escapeHtml(poem.body)}</div>
+      </div>
+      <div class="poem-social">
+        <button class="social-btn like-btn" data-poem-id="${poem.id}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.8-10-9.5C.5 7.5 3 4 6.5 4c2 0 3.5 1.2 5.5 3.5C14 5.2 15.5 4 17.5 4 21 4 23.5 7.5 22 11.5 19.5 16.2 12 21 12 21Z"/></svg>
+          <span class="like-count">0</span>
+        </button>
+        <button class="social-btn comment-toggle-btn" data-poem-id="${poem.id}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>
+          <span class="comment-count">0</span> comments
+        </button>
+      </div>
+      <div class="comment-section" data-poem-id="${poem.id}">
+        <div class="comment-list"></div>
+        <div class="comment-form">
+          <input type="text" class="comment-name" placeholder="Your name (optional)">
+          <textarea class="comment-text" placeholder="Write a comment..."></textarea>
+          <button class="comment-post-btn">Post comment</button>
+        </div>
       </div>
       <div class="card-actions">
         <button class="copy-btn">Copy code</button>
@@ -669,43 +993,63 @@ for a hand that has not come to write them.</div>
     </div>`;
   }
 
+  function makeId(){
+    return 'poem-' + Date.now() + '-' + Math.random().toString(36).slice(2,7);
+  }
+
   function codeForPoem(poem){
-    return `<div class="poem-card" data-poem="custom">
-  <div class="pin"></div>
-  <span class="poem-badge">${poem.type}</span>
-  <div class="poem-title">${poem.title}</div>
-  <div class="poem-snippet">"${poem.snippet}"</div>
+    const langBadge = poem.lang === 'Hindi' ? ' · हिन्दी' : '';
+    const photoHtml = poem.photo ? `\n  <img class="poem-photo" src="${poem.photo}" alt="${poem.title}">` : '';
+    return `<div class="poem-card" data-id="${poem.id}">${photoHtml}
+  <div class="poem-head">
+    <span class="poem-title">${poem.title}</span>
+    <span class="poem-badge">${poem.type}${langBadge}</span>
+  </div>
+  <p class="poem-snippet">"${poem.snippet}"</p>
   <div class="poem-full">
     <div class="poem-full-inner">${poem.body}</div>
+  </div>
+  <div class="poem-social">
+    <button class="social-btn like-btn" data-poem-id="${poem.id}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.8-10-9.5C.5 7.5 3 4 6.5 4c2 0 3.5 1.2 5.5 3.5C14 5.2 15.5 4 17.5 4 21 4 23.5 7.5 22 11.5 19.5 16.2 12 21 12 21Z"/></svg>
+      <span class="like-count">0</span>
+    </button>
+    <button class="social-btn comment-toggle-btn" data-poem-id="${poem.id}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>
+      <span class="comment-count">0</span> comments
+    </button>
+  </div>
+  <div class="comment-section" data-poem-id="${poem.id}">
+    <div class="comment-list"></div>
+    <div class="comment-form">
+      <input type="text" class="comment-name" placeholder="Your name (optional)">
+      <textarea class="comment-text" placeholder="Write a comment..."></textarea>
+      <button class="comment-post-btn">Post comment</button>
+    </div>
   </div>
 </div>`;
   }
 
   function loadPoems(){
-    try{
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    }catch(e){ return []; }
+    try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch(e){ return []; }
   }
-  function savePoems(poems){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(poems));
-  }
+  function savePoems(poems){ localStorage.setItem(STORAGE_KEY, JSON.stringify(poems)); }
 
   function renderSavedPoems(){
     document.querySelectorAll('.poem-card[data-custom="true"]').forEach(el => el.remove());
     const poems = loadPoems();
     poems.forEach((poem, idx) => {
       const wrapper = document.createElement('div');
-      wrapper.innerHTML = buildCardHTML(poem, idx);
+      wrapper.innerHTML = buildCardHTML(poem);
       const cardEl = wrapper.firstElementChild;
       grid.insertBefore(cardEl, addTrigger);
       wireUnfold(cardEl);
+      wireSocialForCard(cardEl);
 
       cardEl.querySelector('.copy-btn').addEventListener('click', (e) => {
         e.stopPropagation();
-        navigator.clipboard.writeText(codeForPoem(poem)).then(() => {
-          e.target.textContent = 'Copied!';
-          setTimeout(() => e.target.textContent = 'Copy code', 1500);
-        });
+        copyText(codeForPoem(poem), e.target, 'Copy code');
       });
       cardEl.querySelector('.delete-btn').addEventListener('click', (e) => {
         e.stopPropagation();
@@ -717,20 +1061,48 @@ for a hand that has not come to write them.</div>
     });
   }
 
-  function openModal(){
-    modal.classList.add('show');
-    copyHint.classList.remove('show');
-    titleInput.focus();
-  }
+  function openModal(){ modal.classList.add('show'); copyHint.classList.remove('show'); titleInput.focus(); }
   function closeModal(){
     modal.classList.remove('show');
-    titleInput.value = '';
-    snippetInput.value = '';
-    bodyInput.value = '';
-    typeInput.value = 'Poem';
+    titleInput.value = ''; snippetInput.value = ''; bodyInput.value = '';
+    typeInput.value = 'Poem'; langInput.value = 'English';
+    photoInput.value = ''; pendingPhotoData = null; photoPreviewWrap.style.display = 'none';
   }
 
-  addTrigger.addEventListener('click', openModal);
+  const passwordModal = document.getElementById('passwordModal');
+  const pwInput = document.getElementById('pwInput');
+  const pwError = document.getElementById('pwError');
+  const pwSubmitBtn = document.getElementById('pwSubmitBtn');
+  const pwCancelBtn = document.getElementById('pwCancelBtn');
+  const pwModalClose = document.getElementById('pwModalClose');
+
+  function openPasswordModal(){
+    passwordModal.classList.add('show');
+    pwError.style.display = 'none';
+    pwInput.value = '';
+    pwInput.style.borderColor = '';
+    setTimeout(() => pwInput.focus(), 50);
+  }
+  function closePasswordModal(){
+    passwordModal.classList.remove('show');
+  }
+  function checkPassword(){
+    if(pwInput.value === ADMIN_PASSWORD){
+      closePasswordModal();
+      openModal();
+    }else{
+      pwError.style.display = 'block';
+      pwInput.style.borderColor = '#B5615A';
+      pwInput.focus();
+    }
+  }
+
+  addTrigger.addEventListener('click', openPasswordModal);
+  pwSubmitBtn.addEventListener('click', checkPassword);
+  pwCancelBtn.addEventListener('click', closePasswordModal);
+  pwModalClose.addEventListener('click', closePasswordModal);
+  pwInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') checkPassword(); });
+  passwordModal.addEventListener('click', (e) => { if(e.target === passwordModal) closePasswordModal(); });
   modalClose.addEventListener('click', closeModal);
   cancelBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
@@ -741,15 +1113,18 @@ for a hand that has not come to write them.</div>
     const title = titleInput.value.trim();
     const body = bodyInput.value.trim();
     if(!title || !body){
-      titleInput.style.borderColor = title ? '' : 'var(--twine)';
-      bodyInput.style.borderColor = body ? '' : 'var(--twine)';
+      titleInput.style.borderColor = title ? '' : '#C08078';
+      bodyInput.style.borderColor = body ? '' : '#C08078';
       return;
     }
     const poem = {
+      id: makeId(),
       type: typeInput.value,
+      lang: langInput.value,
       title: title,
       snippet: snippetInput.value.trim() || body.split('\n')[0].slice(0, 50),
-      body: body
+      body: body,
+      photo: pendingPhotoData
     };
     const poems = loadPoems();
     poems.push(poem);
@@ -761,10 +1136,7 @@ for a hand that has not come to write them.</div>
 
   copyCodeBtn.addEventListener('click', () => {
     if(!lastSaved) return;
-    navigator.clipboard.writeText(codeForPoem(lastSaved)).then(() => {
-      copyCodeBtn.textContent = 'Copied!';
-      setTimeout(() => copyCodeBtn.textContent = 'Copy poem code', 1500);
-    });
+    copyText(codeForPoem(lastSaved), copyCodeBtn, 'Copy poem code');
   });
 
   renderSavedPoems();
