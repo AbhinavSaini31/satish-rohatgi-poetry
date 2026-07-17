@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Mrs+Saint+Delafield&family=Noto+Serif+Devanagari:wght@400;500;600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
   :root{
     --ivory:#FBF1E7;
@@ -1016,6 +1017,22 @@
 </footer>
 
 <script>
+  /* ---------- Supabase config ---------- */
+  /* TODO: paste your own values from Supabase Dashboard -> Settings -> API */
+  const SUPABASE_URL = 'https://fjlbnwprcdxewaeifysl.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_9Pfkl7B4XR_LHwr3EkcNog_Bwhv_6_v';
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  /* a stable per-browser visitor id, used only to prevent double-liking from the same browser */
+  function getVisitorId(){
+    let id = localStorage.getItem('srVisitorId');
+    if(!id){
+      id = 'visitor-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+      localStorage.setItem('srVisitorId', id);
+    }
+    return id;
+  }
+
   /* ---------- nav scroll state ---------- */
   const mainNav = document.getElementById('mainNav');
   window.addEventListener('scroll', () => {
@@ -1067,10 +1084,8 @@
     }
   }
 
-  /* ---------- likes (local, reliable) + comments (local) ---------- */
-  const LIKES_KEY = 'srLikeCounts';
-  const LIKED_KEY = 'srLiked';
-  const COMMENTS_KEY = 'srComments';
+  /* ---------- likes (Supabase) + comments (Supabase) ---------- */
+  const LIKED_KEY = 'srLiked'; /* stays local: just remembers which poems THIS browser already liked, to stop double-clicks */
 
   function getLikedSet(){
     try{ return new Set(JSON.parse(localStorage.getItem(LIKED_KEY) || '[]')); }
@@ -1080,37 +1095,29 @@
     localStorage.setItem(LIKED_KEY, JSON.stringify([...set]));
   }
 
-  function getLikeCounts(){
-    try{ return JSON.parse(localStorage.getItem(LIKES_KEY) || '{}'); }
-    catch(e){ return {}; }
+  async function getLikeCount(poemId){
+    const { data, error } = await sb.from('likes').select('count').eq('poem_id', poemId).maybeSingle();
+    if(error){ console.error('getLikeCount error', error); return 0; }
+    return data ? data.count : 0;
   }
-  function getLikeCount(poemId){
-    const counts = getLikeCounts();
-    return counts[poemId] || 0;
-  }
-  function incrementLikeCount(poemId){
-    const counts = getLikeCounts();
-    counts[poemId] = (counts[poemId] || 0) + 1;
-    localStorage.setItem(LIKES_KEY, JSON.stringify(counts));
-    return counts[poemId];
+  async function incrementLikeCount(poemId){
+    const { data, error } = await sb.rpc('increment_like', { p_poem_id: poemId });
+    if(error){ console.error('incrementLikeCount error', error); return await getLikeCount(poemId); }
+    return data;
   }
 
-  function getComments(poemId){
-    try{
-      const all = JSON.parse(localStorage.getItem(COMMENTS_KEY) || '{}');
-      return all[poemId] || [];
-    }catch(e){ return []; }
+  async function getComments(poemId){
+    const { data, error } = await sb.from('comments').select('*').eq('poem_id', poemId).order('created_at', { ascending: true });
+    if(error){ console.error('getComments error', error); return []; }
+    return data || [];
   }
-  function saveComment(poemId, comment){
-    let all = {};
-    try{ all = JSON.parse(localStorage.getItem(COMMENTS_KEY) || '{}'); }catch(e){}
-    if(!all[poemId]) all[poemId] = [];
-    all[poemId].push(comment);
-    localStorage.setItem(COMMENTS_KEY, JSON.stringify(all));
+  async function saveComment(poemId, comment){
+    const { error } = await sb.from('comments').insert({ poem_id: poemId, name: comment.name || null, text: comment.text });
+    if(error) console.error('saveComment error', error);
   }
 
-  function renderComments(poemId, listEl){
-    const comments = getComments(poemId);
+  async function renderComments(poemId, listEl){
+    const comments = await getComments(poemId);
     if(comments.length === 0){
       listEl.innerHTML = '<div class="comment-empty">No comments yet — be the first to leave one.</div>';
       return;
@@ -1122,7 +1129,7 @@
       </div>`).join('');
   }
 
-  function wireSocialForCard(cardEl){
+  async function wireSocialForCard(cardEl){
     const poemId = cardEl.dataset.id;
     if(!poemId) return;
 
@@ -1130,30 +1137,30 @@
     const likeCountEl = likeBtn.querySelector('.like-count');
     const likedSet = getLikedSet();
     if(likedSet.has(poemId)) likeBtn.classList.add('liked');
-    likeCountEl.textContent = getLikeCount(poemId);
+    likeCountEl.textContent = await getLikeCount(poemId);
 
-    likeBtn.addEventListener('click', (e) => {
+    likeBtn.addEventListener('click', async (e) => {
       e.stopPropagation();
       const set = getLikedSet();
       if(set.has(poemId)) return;
       likeBtn.classList.add('liked');
-      const newCount = incrementLikeCount(poemId);
-      likeCountEl.textContent = newCount;
       set.add(poemId);
       saveLikedSet(set);
       spawnHeartBurst(likeBtn);
+      const newCount = await incrementLikeCount(poemId);
+      likeCountEl.textContent = newCount;
     });
 
     const toggleBtn = cardEl.querySelector('.comment-toggle-btn');
     const commentSection = cardEl.querySelector('.comment-section');
     const commentList = cardEl.querySelector('.comment-list');
     const commentCountEl = toggleBtn.querySelector('.comment-count');
-    commentCountEl.textContent = getComments(poemId).length;
+    commentCountEl.textContent = (await getComments(poemId)).length;
 
-    toggleBtn.addEventListener('click', (e) => {
+    toggleBtn.addEventListener('click', async (e) => {
       e.stopPropagation();
       commentSection.classList.toggle('open');
-      if(commentSection.classList.contains('open')) renderComments(poemId, commentList);
+      if(commentSection.classList.contains('open')) await renderComments(poemId, commentList);
     });
 
     const nameInput = cardEl.querySelector('.comment-name');
@@ -1161,14 +1168,14 @@
     const postBtn = cardEl.querySelector('.comment-post-btn');
     commentSection.addEventListener('click', (e) => e.stopPropagation());
 
-    postBtn.addEventListener('click', () => {
+    postBtn.addEventListener('click', async () => {
       const text = textInput.value.trim();
       if(!text) return;
-      saveComment(poemId, { name: nameInput.value.trim(), text: text });
+      await saveComment(poemId, { name: nameInput.value.trim(), text: text });
       nameInput.value = '';
       textInput.value = '';
-      renderComments(poemId, commentList);
-      commentCountEl.textContent = getComments(poemId).length;
+      await renderComments(poemId, commentList);
+      commentCountEl.textContent = (await getComments(poemId)).length;
     });
 
     /* share */
@@ -1258,7 +1265,6 @@
   }
   document.querySelectorAll('.poem-card').forEach(wireUnfold);
 
-  const STORAGE_KEY = 'srPoems';
   const ADMIN_PASSWORD = 'satish123';
 
   function copyText(text, btn, defaultLabel){
@@ -1412,16 +1418,24 @@
 </div>`;
   }
 
-  function loadPoems(){
-    try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
-    catch(e){ return []; }
+  async function loadPoems(){
+    const { data, error } = await sb.from('poems').select('*').order('created_at', { ascending: false });
+    if(error){ console.error('loadPoems error', error); return []; }
+    return data || [];
   }
-  function savePoems(poems){ localStorage.setItem(STORAGE_KEY, JSON.stringify(poems)); }
+  async function insertPoem(poem){
+    const { error } = await sb.from('poems').insert(poem);
+    if(error) console.error('insertPoem error', error);
+  }
+  async function deletePoem(id){
+    const { error } = await sb.from('poems').delete().eq('id', id);
+    if(error) console.error('deletePoem error', error);
+  }
 
-  function renderSavedPoems(){
+  async function renderSavedPoems(){
     document.querySelectorAll('.poem-card[data-custom="true"]').forEach(el => el.remove());
-    const poems = loadPoems();
-    poems.forEach((poem, idx) => {
+    const poems = await loadPoems();
+    poems.forEach((poem) => {
       const wrapper = document.createElement('div');
       wrapper.innerHTML = buildCardHTML(poem);
       const cardEl = wrapper.firstElementChild;
@@ -1433,12 +1447,10 @@
         e.stopPropagation();
         copyText(codeForPoem(poem), e.target, 'Copy code');
       });
-      cardEl.querySelector('.delete-btn').addEventListener('click', (e) => {
+      cardEl.querySelector('.delete-btn').addEventListener('click', async (e) => {
         e.stopPropagation();
-        const all = loadPoems();
-        all.splice(idx, 1);
-        savePoems(all);
-        renderSavedPoems();
+        await deletePoem(poem.id);
+        await renderSavedPoems();
       });
     });
 
@@ -1491,46 +1503,4 @@
   pwCancelBtn.addEventListener('click', closePasswordModal);
   pwModalClose.addEventListener('click', closePasswordModal);
   pwInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') checkPassword(); });
-  passwordModal.addEventListener('click', (e) => { if(e.target === passwordModal) closePasswordModal(); });
-  modalClose.addEventListener('click', closeModal);
-  cancelBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
-
-  let lastSaved = null;
-
-  saveBtn.addEventListener('click', () => {
-    const title = titleInput.value.trim();
-    const body = bodyInput.value.trim();
-    if(!title || !body){
-      titleInput.style.borderColor = title ? '' : '#C08078';
-      bodyInput.style.borderColor = body ? '' : '#C08078';
-      return;
-    }
-    const poem = {
-      id: makeId(),
-      type: typeInput.value,
-      lang: langInput.value,
-      category: categoryInput.value,
-      title: title,
-      snippet: snippetInput.value.trim() || body.split('\n')[0].slice(0, 50),
-      body: body,
-      photo: pendingPhotoData
-    };
-    const poems = loadPoems();
-    poems.push(poem);
-    savePoems(poems);
-    renderSavedPoems();
-    lastSaved = poem;
-    copyHint.classList.add('show');
-  });
-
-  copyCodeBtn.addEventListener('click', () => {
-    if(!lastSaved) return;
-    copyText(codeForPoem(lastSaved), copyCodeBtn, 'Copy poem code');
-  });
-
-  renderSavedPoems();
-</script>
-
-</body>
-</html>
+  passwo
