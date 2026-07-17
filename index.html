@@ -1503,4 +1503,44 @@
   pwCancelBtn.addEventListener('click', closePasswordModal);
   pwModalClose.addEventListener('click', closePasswordModal);
   pwInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') checkPassword(); });
-  passwo
+  passwordModal.addEventListener('click', (e) => { if(e.target === passwordModal) closePasswordModal(); });
+  modalClose.addEventListener('click', closeModal);
+  cancelBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+
+  let lastSaved = null;
+
+  saveBtn.addEventListener('click', async () => {
+    const title = titleInput.value.trim();
+    const body = bodyInput.value.trim();
+    if(!title || !body){
+      titleInput.style.borderColor = title ? '' : '#C08078';
+      bodyInput.style.borderColor = body ? '' : '#C08078';
+      return;
+    }
+    const poem = {
+      id: makeId(),
+      type: typeInput.value,
+      lang: langInput.value,
+      category: categoryInput.value,
+      title: title,
+      snippet: snippetInput.value.trim() || body.split('\n')[0].slice(0, 50),
+      body: body,
+      photo: pendingPhotoData
+    };
+    await insertPoem(poem);
+    await renderSavedPoems();
+    lastSaved = poem;
+    copyHint.classList.add('show');
+  });
+
+  copyCodeBtn.addEventListener('click', () => {
+    if(!lastSaved) return;
+    copyText(codeForPoem(lastSaved), copyCodeBtn, 'Copy poem code');
+  });
+
+  renderSavedPoems();
+</script>
+
+</body>
+</html>
