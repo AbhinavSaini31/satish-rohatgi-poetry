@@ -124,6 +124,51 @@
   .nav-links a:hover{color:var(--rose-deep);}
   .nav-links a:hover::after{width:100%;}
 
+  .auth-widget{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-left:24px;
+  }
+  .auth-btn{
+    font-family:'Jost', sans-serif;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    background:none;
+    border:1px solid rgba(63,79,58,0.35);
+    color:var(--charcoal-soft);
+    padding:7px 14px;
+    border-radius:16px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background 0.2s ease;
+  }
+  .auth-btn:hover{background:rgba(196,163,90,0.12);}
+  .auth-user{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .auth-user img{
+    width:26px; height:26px;
+    border-radius:50%;
+    object-fit:cover;
+  }
+  .auth-user span{
+    font-family:'Jost', sans-serif;
+    font-size:11px;
+    color:var(--charcoal-soft);
+    max-width:100px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  @media (max-width:900px){
+    .auth-widget{margin-left:0;}
+    .auth-user span{display:none;}
+  }
+
   .nav-hamburger{
     display:none;
     flex-direction:column;
@@ -558,6 +603,21 @@
   }
   .comment-post-btn:hover{background:var(--rose-deepest);}
 
+  .comment-signin-prompt{margin-top:8px;}
+  .comment-signin-btn{
+    font-family:'Jost', sans-serif;
+    font-size:10px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    background:none;
+    border:1px solid rgba(63,79,58,0.35);
+    color:var(--charcoal-soft);
+    padding:7px 14px;
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .comment-signin-btn:hover{background:rgba(196,163,90,0.12);}
+
   /* ---------- category filter ---------- */
   .filter-bar{
     display:flex;
@@ -846,6 +906,7 @@
     <a href="#poems">Poems</a>
     <a href="#contact">Contact</a>
   </div>
+  <div class="auth-widget" id="authWidget"></div>
   <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
@@ -932,20 +993,6 @@
   <p class="hint">click a poem to read it in full</p>
 </section>
 
-<div class="modal-overlay" id="passwordModal">
-  <div class="modal-card" style="max-width:380px;">
-    <button class="modal-close" id="pwModalClose" aria-label="Close">✕</button>
-    <h3>Owner access</h3>
-    <label for="pwInput">Enter password</label>
-    <input type="password" id="pwInput" placeholder="Password">
-    <p id="pwError" style="display:none; color:#B5615A; font-family:'Jost', sans-serif; font-size:12px; margin-top:8px;">Incorrect password — try again.</p>
-    <div class="modal-buttons">
-      <button class="btn-primary" id="pwSubmitBtn">Unlock</button>
-      <button class="btn-secondary" id="pwCancelBtn">Cancel</button>
-    </div>
-  </div>
-</div>
-
 <div class="modal-overlay" id="poemModal">
   <div class="modal-card">
     <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
@@ -1031,6 +1078,72 @@
     return id;
   }
 
+  /* ---------- auth (Google via Supabase) ---------- */
+  const ADMIN_EMAIL = '1818abhinavsaini@gmail.com';
+  let currentSession = null;
+
+  function currentUserIsAdmin(){
+    return !!currentSession && currentSession.user.email === ADMIN_EMAIL;
+  }
+  function currentUserDisplayName(){
+    if(!currentSession) return '';
+    const meta = currentSession.user.user_metadata || {};
+    return meta.full_name || meta.name || currentSession.user.email;
+  }
+
+  async function signInWithGoogle(){
+    await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } });
+  }
+  async function signOut(){
+    await sb.auth.signOut();
+  }
+
+  const authWidget = document.getElementById('authWidget');
+  function renderAuthWidget(){
+    if(currentSession){
+      const meta = currentSession.user.user_metadata || {};
+      const avatar = meta.avatar_url || meta.picture || '';
+      authWidget.innerHTML = `
+        <div class="auth-user">
+          ${avatar ? `<img src="${avatar}" alt="">` : ''}
+          <span>${escapeHtml(currentUserDisplayName())}</span>
+          <button class="auth-btn" id="signOutBtn">Sign out</button>
+        </div>`;
+      document.getElementById('signOutBtn').addEventListener('click', signOut);
+    }else{
+      authWidget.innerHTML = `<button class="auth-btn" id="signInBtn">Sign in with Google</button>`;
+      document.getElementById('signInBtn').addEventListener('click', signInWithGoogle);
+    }
+  }
+
+  function updateAdminModeFromSession(){
+    if(currentUserIsAdmin()) document.body.classList.add('admin-mode');
+    else document.body.classList.remove('admin-mode');
+  }
+
+  /* keep every open comment box (sign-in prompt vs form) in sync with auth state */
+  function updateAllCommentBoxes(){
+    document.querySelectorAll('.comment-section').forEach(section => {
+      const prompt = section.querySelector('.comment-signin-prompt');
+      const form = section.querySelector('.comment-form');
+      if(!prompt || !form) return;
+      if(currentSession){
+        prompt.style.display = 'none';
+        form.style.display = 'block';
+      }else{
+        prompt.style.display = 'block';
+        form.style.display = 'none';
+      }
+    });
+  }
+
+  sb.auth.onAuthStateChange((_event, session) => {
+    currentSession = session;
+    renderAuthWidget();
+    updateAdminModeFromSession();
+    updateAllCommentBoxes();
+  });
+
   /* ---------- nav scroll state ---------- */
   const mainNav = document.getElementById('mainNav');
   window.addEventListener('scroll', () => {
@@ -1109,8 +1222,14 @@
     if(error){ console.error('getComments error', error); return []; }
     return data || [];
   }
-  async function saveComment(poemId, comment){
-    const { error } = await sb.from('comments').insert({ poem_id: poemId, name: comment.name || null, text: comment.text });
+  async function saveComment(poemId, text){
+    if(!currentSession){ console.error('saveComment error: not signed in'); return; }
+    const { error } = await sb.from('comments').insert({
+      poem_id: poemId,
+      user_id: currentSession.user.id,
+      name: currentUserDisplayName(),
+      text: text
+    });
     if(error) console.error('saveComment error', error);
   }
 
@@ -1161,16 +1280,22 @@
       if(commentSection.classList.contains('open')) await renderComments(poemId, commentList);
     });
 
-    const nameInput = cardEl.querySelector('.comment-name');
     const textInput = cardEl.querySelector('.comment-text');
     const postBtn = cardEl.querySelector('.comment-post-btn');
+    const signinBtn = cardEl.querySelector('.comment-signin-btn');
     commentSection.addEventListener('click', (e) => e.stopPropagation());
+
+    if(signinBtn){
+      signinBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        signInWithGoogle();
+      });
+    }
 
     postBtn.addEventListener('click', async () => {
       const text = textInput.value.trim();
-      if(!text) return;
-      await saveComment(poemId, { name: nameInput.value.trim(), text: text });
-      nameInput.value = '';
+      if(!text || !currentSession) return;
+      await saveComment(poemId, text);
       textInput.value = '';
       await renderComments(poemId, commentList);
       commentCountEl.textContent = (await getComments(poemId)).length;
@@ -1263,7 +1388,6 @@
   }
   document.querySelectorAll('.poem-card').forEach(wireUnfold);
 
-  const ADMIN_PASSWORD = 'satish123';
 
   function copyText(text, btn, defaultLabel){
     function done(){
@@ -1358,8 +1482,10 @@
       </div>
       <div class="comment-section" data-poem-id="${poem.id}">
         <div class="comment-list"></div>
-        <div class="comment-form">
-          <input type="text" class="comment-name" placeholder="Your name (optional)">
+        <div class="comment-signin-prompt">
+          <button class="comment-signin-btn">Sign in with Google to comment</button>
+        </div>
+        <div class="comment-form" style="display:none;">
           <textarea class="comment-text" placeholder="Write a comment..."></textarea>
           <button class="comment-post-btn">Post comment</button>
         </div>
@@ -1408,8 +1534,10 @@
   </div>
   <div class="comment-section" data-poem-id="${poem.id}">
     <div class="comment-list"></div>
-    <div class="comment-form">
-      <input type="text" class="comment-name" placeholder="Your name (optional)">
+    <div class="comment-signin-prompt">
+      <button class="comment-signin-btn">Sign in with Google to comment</button>
+    </div>
+    <div class="comment-form" style="display:none;">
       <textarea class="comment-text" placeholder="Write a comment..."></textarea>
       <button class="comment-post-btn">Post comment</button>
     </div>
@@ -1467,6 +1595,8 @@
       const show = (activeCat === 'All') || (card.dataset.category === activeCat);
       card.classList.toggle('hidden-by-filter', !show);
     });
+
+    updateAllCommentBoxes();
   }
 
   function openModal(){
@@ -1503,62 +1633,7 @@
     openModal();
   }
 
-  const passwordModal = document.getElementById('passwordModal');
-  const pwInput = document.getElementById('pwInput');
-  const pwError = document.getElementById('pwError');
-  const pwSubmitBtn = document.getElementById('pwSubmitBtn');
-  const pwCancelBtn = document.getElementById('pwCancelBtn');
-  const pwModalClose = document.getElementById('pwModalClose');
-
-  function openPasswordModal(){
-    passwordModal.classList.add('show');
-    pwError.style.display = 'none';
-    pwInput.value = '';
-    pwInput.style.borderColor = '';
-    setTimeout(() => pwInput.focus(), 50);
-  }
-  function closePasswordModal(){
-    passwordModal.classList.remove('show');
-  }
-  function isAdminMode(){
-    return document.body.classList.contains('admin-mode');
-  }
-  function enableAdminMode(){
-    document.body.classList.add('admin-mode');
-    sessionStorage.setItem('srAdminMode', '1');
-  }
-  function checkPassword(){
-    if(pwInput.value === ADMIN_PASSWORD){
-      closePasswordModal();
-      enableAdminMode();
-    }else{
-      pwError.style.display = 'block';
-      pwInput.style.borderColor = '#B5615A';
-      pwInput.focus();
-    }
-  }
-
-  /* restore admin mode for this browser tab/session, so a reload doesn't lock you out mid-edit */
-  if(sessionStorage.getItem('srAdminMode') === '1') enableAdminMode();
-
-  /* hidden entry point: type the word "admin" anywhere on the page (no need to click into a field) */
-  let adminKeyBuffer = '';
-  document.addEventListener('keydown', (e) => {
-    if(isAdminMode()) return;
-    if(document.activeElement && ['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
-    adminKeyBuffer = (adminKeyBuffer + e.key.toLowerCase()).slice(-5);
-    if(adminKeyBuffer === 'admin'){
-      adminKeyBuffer = '';
-      openPasswordModal();
-    }
-  });
-
   addTrigger.addEventListener('click', () => { editingPoemId = null; openModal(); });
-  pwSubmitBtn.addEventListener('click', checkPassword);
-  pwCancelBtn.addEventListener('click', closePasswordModal);
-  pwModalClose.addEventListener('click', closePasswordModal);
-  pwInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') checkPassword(); });
-  passwordModal.addEventListener('click', (e) => { if(e.target === passwordModal) closePasswordModal(); });
   modalClose.addEventListener('click', closeModal);
   cancelBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
