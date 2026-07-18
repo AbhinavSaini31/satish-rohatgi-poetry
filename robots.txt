@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://abhinavsaini31.github.io/satish-rohatgi-poetry/sitemap.xml
