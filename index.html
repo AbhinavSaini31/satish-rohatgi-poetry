@@ -642,9 +642,12 @@
   .share-popover svg{width:15px; height:15px; flex-shrink:0;}
 
   .card-actions{
-    display:flex;
+    display:none;
     gap:10px;
     margin-top:16px;
+  }
+  body.admin-mode .card-actions{
+    display:flex;
   }
   .card-actions button{
     font-family:'Jost', sans-serif;
@@ -662,16 +665,19 @@
 
   /* add poem card */
   .add-card{
+    display:none;
     border:1.5px dashed var(--sage);
     border-radius:4px;
     background:transparent;
-    display:flex;
     align-items:center;
     justify-content:center;
     gap:10px;
     padding:26px;
     cursor:pointer;
     transition:background 0.3s ease, border-color 0.3s ease;
+  }
+  body.admin-mode .add-card{
+    display:flex;
   }
   .add-card:hover{background:rgba(138,154,126,0.08); border-color:var(--forest);}
   .add-card .plus{
@@ -923,7 +929,7 @@
 
   </div>
 
-  <p class="hint">click a poem to read it in full &nbsp;·&nbsp; use the card above to add your first poem</p>
+  <p class="hint">click a poem to read it in full</p>
 </section>
 
 <div class="modal-overlay" id="passwordModal">
@@ -943,7 +949,7 @@
 <div class="modal-overlay" id="poemModal">
   <div class="modal-card">
     <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
-    <h3>Add a new poem</h3>
+    <h3 id="poemModalTitle">Add a new poem</h3>
 
     <label for="poemType">Type</label>
     <select id="poemType">
@@ -986,14 +992,6 @@
       <button class="btn-primary" id="savePoemBtn">Add poem</button>
       <button class="btn-secondary" id="cancelPoemBtn">Cancel</button>
     </div>
-
-    <div class="copy-hint" id="copyHint">
-      Saved to this browser ✓ — it'll show every time you open the site here.<br>
-      To make it show for <em>everyone</em> visiting the site, click below to copy its code, then paste it to Claude (or into the poems section of the file) and re-upload.
-      <div class="modal-buttons">
-        <button class="btn-secondary" id="copyCodeBtn">Copy poem code</button>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -1013,7 +1011,7 @@
 </section>
 
 <footer>
-  Satish Rohatgi — Poetry &nbsp;·&nbsp; © <span id="year"></span>
+  Satish Rohatgi — Poetry &nbsp;·&nbsp; © <span id="year"></span> &nbsp;·&nbsp; <a href="disclaimer.html" style="color:inherit;">Copyright &amp; Privacy Policy</a>
 </footer>
 
 <script>
@@ -1292,10 +1290,10 @@
   const addTrigger = document.getElementById('addPoemTrigger');
   const modal = document.getElementById('poemModal');
   const modalClose = document.getElementById('modalClose');
+  const modalTitle = document.getElementById('poemModalTitle');
   const cancelBtn = document.getElementById('cancelPoemBtn');
   const saveBtn = document.getElementById('savePoemBtn');
-  const copyHint = document.getElementById('copyHint');
-  const copyCodeBtn = document.getElementById('copyCodeBtn');
+  let editingPoemId = null;
 
   const typeInput = document.getElementById('poemType');
   const langInput = document.getElementById('poemLang');
@@ -1367,6 +1365,7 @@
         </div>
       </div>
       <div class="card-actions">
+        <button class="edit-btn">Edit</button>
         <button class="copy-btn">Copy code</button>
         <button class="delete-btn">Remove</button>
       </div>
@@ -1427,6 +1426,10 @@
     const { error } = await sb.from('poems').insert(poem);
     if(error) console.error('insertPoem error', error);
   }
+  async function updatePoem(id, poem){
+    const { error } = await sb.from('poems').update(poem).eq('id', id);
+    if(error) console.error('updatePoem error', error);
+  }
   async function deletePoem(id){
     const { error } = await sb.from('poems').delete().eq('id', id);
     if(error) console.error('deletePoem error', error);
@@ -1447,6 +1450,10 @@
         e.stopPropagation();
         copyText(codeForPoem(poem), e.target, 'Copy code');
       });
+      cardEl.querySelector('.edit-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        openEditModal(poem);
+      });
       cardEl.querySelector('.delete-btn').addEventListener('click', async (e) => {
         e.stopPropagation();
         await deletePoem(poem.id);
@@ -1462,12 +1469,38 @@
     });
   }
 
-  function openModal(){ modal.classList.add('show'); copyHint.classList.remove('show'); titleInput.focus(); }
+  function openModal(){
+    modal.classList.add('show');
+    titleInput.focus();
+  }
   function closeModal(){
     modal.classList.remove('show');
     titleInput.value = ''; snippetInput.value = ''; bodyInput.value = '';
     typeInput.value = 'Poem'; langInput.value = 'English'; categoryInput.value = 'Love';
     photoInput.value = ''; pendingPhotoData = null; photoPreviewWrap.style.display = 'none';
+    editingPoemId = null;
+    modalTitle.textContent = 'Add a new poem';
+    saveBtn.textContent = 'Add poem';
+  }
+
+  function openEditModal(poem){
+    editingPoemId = poem.id;
+    modalTitle.textContent = 'Edit poem';
+    saveBtn.textContent = 'Save changes';
+    typeInput.value = poem.type || 'Poem';
+    langInput.value = poem.lang || 'English';
+    categoryInput.value = poem.category || 'Love';
+    titleInput.value = poem.title || '';
+    snippetInput.value = poem.snippet || '';
+    bodyInput.value = poem.body || '';
+    pendingPhotoData = poem.photo || null;
+    if(pendingPhotoData){
+      photoPreview.src = pendingPhotoData;
+      photoPreviewWrap.style.display = 'block';
+    }else{
+      photoPreviewWrap.style.display = 'none';
+    }
+    openModal();
   }
 
   const passwordModal = document.getElementById('passwordModal');
@@ -1487,10 +1520,17 @@
   function closePasswordModal(){
     passwordModal.classList.remove('show');
   }
+  function isAdminMode(){
+    return document.body.classList.contains('admin-mode');
+  }
+  function enableAdminMode(){
+    document.body.classList.add('admin-mode');
+    sessionStorage.setItem('srAdminMode', '1');
+  }
   function checkPassword(){
     if(pwInput.value === ADMIN_PASSWORD){
       closePasswordModal();
-      openModal();
+      enableAdminMode();
     }else{
       pwError.style.display = 'block';
       pwInput.style.borderColor = '#B5615A';
@@ -1498,7 +1538,22 @@
     }
   }
 
-  addTrigger.addEventListener('click', openPasswordModal);
+  /* restore admin mode for this browser tab/session, so a reload doesn't lock you out mid-edit */
+  if(sessionStorage.getItem('srAdminMode') === '1') enableAdminMode();
+
+  /* hidden entry point: type the word "admin" anywhere on the page (no need to click into a field) */
+  let adminKeyBuffer = '';
+  document.addEventListener('keydown', (e) => {
+    if(isAdminMode()) return;
+    if(document.activeElement && ['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+    adminKeyBuffer = (adminKeyBuffer + e.key.toLowerCase()).slice(-5);
+    if(adminKeyBuffer === 'admin'){
+      adminKeyBuffer = '';
+      openPasswordModal();
+    }
+  });
+
+  addTrigger.addEventListener('click', () => { editingPoemId = null; openModal(); });
   pwSubmitBtn.addEventListener('click', checkPassword);
   pwCancelBtn.addEventListener('click', closePasswordModal);
   pwModalClose.addEventListener('click', closePasswordModal);
@@ -1508,7 +1563,6 @@
   cancelBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
 
-  let lastSaved = null;
 
   saveBtn.addEventListener('click', async () => {
     const title = titleInput.value.trim();
@@ -1518,8 +1572,7 @@
       bodyInput.style.borderColor = body ? '' : '#C08078';
       return;
     }
-    const poem = {
-      id: makeId(),
+    const poemData = {
       type: typeInput.value,
       lang: langInput.value,
       category: categoryInput.value,
@@ -1528,15 +1581,15 @@
       body: body,
       photo: pendingPhotoData
     };
-    await insertPoem(poem);
-    await renderSavedPoems();
-    lastSaved = poem;
-    copyHint.classList.add('show');
-  });
 
-  copyCodeBtn.addEventListener('click', () => {
-    if(!lastSaved) return;
-    copyText(codeForPoem(lastSaved), copyCodeBtn, 'Copy poem code');
+    if(editingPoemId){
+      await updatePoem(editingPoemId, poemData);
+    }else{
+      const poem = { id: makeId(), ...poemData };
+      await insertPoem(poem);
+    }
+    await renderSavedPoems();
+    closeModal();
   });
 
   renderSavedPoems();
